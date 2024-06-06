@@ -115,7 +115,7 @@ const app = Vue.createApp({
             }
         },
         async editUser(data){
-            alert(`Kamu belum bisa hapus user ${data.username}, saya belum sempat bkinnya hehe :D`)
+            alert(`Kamu belum bisa hapus user ${data}, saya belum sempat bkinnya hehe :D`)
         },
         async closeModal() {
             document.getElementById('closeModalCreat').click();
