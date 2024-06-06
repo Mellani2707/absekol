@@ -123,6 +123,7 @@ const app = Vue.createApp({
     },
     mounted() {
         this.fetchUsers(); // Fetch users when component is mounted
+        localStorage.clear();
     }        
 })
 
