@@ -5,7 +5,8 @@ const initializeDatabase = require('./models/initalizeModel')
 const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
 const studentRoutes = require('./routes/studentRouters');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./swagger/swaggerConfig');
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -26,10 +27,13 @@ const corsOptions = {
         }
     }
 };
-
+// Routes
 app.use('/api', cors(corsOptions), roleRoutes);
 app.use('/api', cors(corsOptions), userRoutes);
 app.use('/api', cors(corsOptions), studentRoutes);
+
+// Swagger setup
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.listen(port, () => {
     console.log(`Server is listening on port: ${port}`);
