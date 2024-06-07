@@ -2,11 +2,17 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const initializeDatabase = require('./models/initalizeModel')
+
 const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
 const studentRoutes = require('./routes/studentRouters');
+const attendanceRoutes = require('./routes/attendanceRoutes');
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swagger/swaggerConfig');
+
+
+
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -31,6 +37,7 @@ const corsOptions = {
 app.use('/api', cors(corsOptions), roleRoutes);
 app.use('/api', cors(corsOptions), userRoutes);
 app.use('/api', cors(corsOptions), studentRoutes);
+app.use('/api', cors(corsOptions), attendanceRoutes);
 
 // Swagger setup
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
