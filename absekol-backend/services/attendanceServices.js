@@ -1,8 +1,21 @@
 const Attendance = require('../models/Attendance');
+const Student = require('../models/Student');
+const User = require('../models/User');
+const Role = require('../models/Role');
 
 const getAttendance = async () => {
     try {
-        const result = await Attendance.findAll();
+        const result = await Attendance.findAll({
+            include:{
+                model:Student,
+                include:{
+                    model:User,
+                    include:{
+                        model:Role
+                    }
+                }
+            }
+        });
         return result;
     } catch (error) {
         throw error.errors ? error : new Error(`Error fetchs : ${error.message}`);

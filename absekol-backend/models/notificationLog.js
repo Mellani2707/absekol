@@ -2,7 +2,7 @@ const { sequelize, DataTypes } = require('../config/db');
 const User = require('./User');
 const Attendance = require('./Attendance');
 
-const NotificationLog = sequelize.define('notificationLog',
+const NotificationLog = sequelize.define('NotificationLog',
 {
     id: {
         type: DataTypes.INTEGER,
@@ -39,10 +39,10 @@ const NotificationLog = sequelize.define('notificationLog',
     timestamps:true
 }
 );
-Attendance.hasMany(notificationLog, { foreignKey:'attendanceId'})
-notificationLog.belongsTo(Attendance, { foreignKey:'attendanceId'})
+Attendance.hasMany(NotificationLog, { foreignKey:'attendanceId'})
+NotificationLog.belongsTo(Attendance, { foreignKey:'attendanceId'})
 
-User.hasMany(notificationLog,{foreignKey:'uid'})
-notificationLog.belongsTo(User,{foreignKey:'uid'})
+User.hasMany(NotificationLog,{foreignKey:'uid'})
+NotificationLog.belongsTo(User,{foreignKey:'uid'})
 
 module.exports = NotificationLog;

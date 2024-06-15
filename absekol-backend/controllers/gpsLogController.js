@@ -1,8 +1,9 @@
-const {createNotificationLog,getNotificationLog,updateNotificationLog,deleteNotificationLog} = require('../services/notificationLogServices');
+const { createGpsLog,getGpsLog,updateGpsLog,deleteGpsLog} = require('../services/gpsLogServices');
 
-const geteNotificationLogController = async (req, res) => {
+
+const getGpsLogController = async (req, res) => {
     try {
-        const result = await getNotificationLog();
+        const result = await getGpsLog();
         res.status(200).json(result)
     } catch (error) {
         res.status(500).json({
@@ -11,10 +12,10 @@ const geteNotificationLogController = async (req, res) => {
         });
     }
 }
-const createNotificationLogController = async (req, res) => {
+const createGpsLogController = async (req, res) => {
     try {
         const raw = req.body;
-        const result = await createNotificationLog(raw);
+        const result = await createGpsLog(raw);
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({
@@ -23,10 +24,10 @@ const createNotificationLogController = async (req, res) => {
         });
     }
 }
-const updateNotificationLogController = async (req, res) => {
+const updateGpsLogController = async (req, res) => {
     try {
         const id = req.body.id;
-        const result = await updateNotificationLog(id, req.body);
+        const result = await updateGpsLog(id, req.body);
         return res.status(201).json(result)
     } catch (error) {
         res.status(500).json({
@@ -35,9 +36,9 @@ const updateNotificationLogController = async (req, res) => {
         });
     }
 }
-const deleteNotificationLogController = async (req, res) => {
+const deleteGpsLogController = async (req, res) => {
     try {
-        await deleteNotificationLog(req.params.id)
+        await deleteGpsLog(req.params.id)
         return res.status(204).send()
     } catch (error) {
         res.status(500).json({
@@ -47,8 +48,9 @@ const deleteNotificationLogController = async (req, res) => {
     }
 }
 module.exports = { 
-createNotificationLogController,
-geteNotificationLogController,
-updateNotificationLogController,
-deleteNotificationLogController    
+    
+    getGpsLogController,
+    createGpsLogController,
+    updateGpsLogController,
+    deleteGpsLogController
 }

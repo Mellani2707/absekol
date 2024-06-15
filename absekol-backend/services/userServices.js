@@ -1,26 +1,41 @@
-    const User = require('../models/User');
-    const Role = require('../models/Role');
+const User = require('../models/User');
+const Role = require('../models/Role');
+const Student = require('../models/Student');
 
-const createUser = async (email, password, nisn, noWa, roleId, username)=>{
+const createUser = async (email, password, nisn, noWa, roleId, username) => {
 
     try {
         const user = await User.create({ email, password, nisn, noWa, roleId, username });
         return user
     } catch (error) {
-            throw error.errors ? error : new Error(`Error creating : ${error.message}`);
+        throw error.errors ? error : new Error(`Error creating : ${error.message}`);
     }
 }
-const getUser=async()=>{
+const getUser = async () => {
     try {
-        const users = await User.findAll({ include: Role });
+        const users = await User.findAll(
+
+            {
+                include:
+                    [
+                        {
+                            model: Student
+                        }, 
+                        {
+                            model: Role
+                        }
+                    ]
+
+            }
+        );
         return users;
     } catch (error) {
         throw error.errors ? error : new Error(`Error fetchs : ${error.message}`);
     }
 }
-const updateUser = async (uid,updateData)=>{
+const updateUser = async (uid, updateData) => {
     try {
-        const user= await User.findByPk(uid);
+        const user = await User.findByPk(uid);
         if (!user) throw new Error(`update failed, user uid ${uid} not found `)
         await user.update(updateData)
         return user;
@@ -39,4 +54,4 @@ const deleteUser = async (uid) => {
         throw error.errors ? error : new Error(`Error deleting: ${error.message}`);
     }
 }
-module.exports={getUser,createUser,updateUser,deleteUser}
+module.exports = { getUser, createUser, updateUser, deleteUser }

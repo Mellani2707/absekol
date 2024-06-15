@@ -25,6 +25,7 @@ const getStudent = async () => {
 
             }
         );
+        // const students = await Student.findAll();
         return students;
     } catch (error) {
         throw error.errors ? error : new Error(`Error fetchs : ${error.message}`);

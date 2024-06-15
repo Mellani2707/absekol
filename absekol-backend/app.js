@@ -7,6 +7,8 @@ const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
 const studentRoutes = require('./routes/studentRouters');
 const attendanceRoutes = require('./routes/attendanceRoutes');
+const gpsLogRoutes = require('./routes/gpsLogRoutes');
+const notificationLogRoutes = require('./routes/notificationLogRoutes');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swagger/swaggerConfig');
@@ -38,6 +40,8 @@ app.use('/api', cors(corsOptions), roleRoutes);
 app.use('/api', cors(corsOptions), userRoutes);
 app.use('/api', cors(corsOptions), studentRoutes);
 app.use('/api', cors(corsOptions), attendanceRoutes);
+app.use('/api', cors(corsOptions), gpsLogRoutes);
+app.use('/api', cors(corsOptions), notificationLogRoutes);
 
 // Swagger setup
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
