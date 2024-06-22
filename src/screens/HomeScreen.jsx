@@ -2,12 +2,44 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
-
+const maleImage = require('../image/L.png');
+const femaleImage = require('../image/P.png');
 const HomeScreen = ({navigation}) => {
   const user = useSelector(state => state.user);
-  console.log('============Check data user from redux========================');
-  console.log(user);
-  console.log('====================================');
+  const userData = user.user;
+  const userStudentData = user.user.Student;
+  const profileImage =
+    userStudentData.jenisKelamin === 'L' ? femaleImage : maleImage;
+
+  const handleLogin = param => {
+    fetch('https://absekol-api.numpang.my.id/api/attendanceInfo/' + param, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          // response.ok memeriksa apakah status code adalah 2xx
+          return response.json();
+        } else {
+          return response.json().then(err => {
+            throw new Error(err.message || 'No Attendance');
+          });
+        }
+      })
+      .then(data => {
+        Alert.alert(
+          'Success',
+          'Ada aktifitas absensi terkahir terekam di database',
+        );
+        const attendanceData = data;
+      })
+      .catch(error => {
+        Alert.alert('Error', 'An error ocfetch data : ' + error.message);
+      });
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -20,13 +52,12 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.profile}>
-          <Image
-            source={require('../image/imel.jpeg')}
-            style={styles.profilePic}
-          />
+          <Image source={profileImage} style={styles.profilePic} />
           <View>
-            <Text style={styles.profileName}>Ria Amanda</Text>
-            <Text style={styles.profileNumber}>09997765655</Text>
+            <Text style={styles.profileName}>
+              {userStudentData ? userStudentData.nama : userData.username}
+            </Text>
+            <Text style={styles.profileNumber}>{userData.noWa}</Text>
           </View>
         </View>
         <TouchableOpacity
