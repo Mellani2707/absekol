@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const initializeDatabase = require('./models/initalizeModel')
 
-const roleRoutes = require('./routes/roleRoutes');
 const userRoutes = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes');
 const studentRoutes = require('./routes/studentRouters');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const gpsLogRoutes = require('./routes/gpsLogRoutes');

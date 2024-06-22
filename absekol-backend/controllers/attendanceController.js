@@ -46,4 +46,22 @@ const deleteAttendanceController = async (req, res) => {
         });
     }
 }
-module.exports={createAttendanceController,getAttendanceController,updateAttendanceController,deleteAttendanceController}
+/**
+ * Controller untuk mendapatkan data attendance checkIn teratas dan checkOut teratas berdasarkan nisn
+ */
+const getTopAttendanceByNisnController = async (req, res) => {
+    try {
+        const { nisn } = req.params;
+        const result = await getTopAttendanceByNisn(nisn);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case :" + error.message,
+            errorDetails: error
+        });
+    }
+};
+module.exports={
+    getTopAttendanceByNisnController,
+    createAttendanceController,
+    getAttendanceController,updateAttendanceController,deleteAttendanceController}

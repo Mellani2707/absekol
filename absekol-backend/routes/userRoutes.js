@@ -54,7 +54,90 @@ const {authorizeRoles,authorizeRole} = require('../config/authorizeRole');
  *           format: date-time
  *           description: The time the user's token expires
  */
-
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: User's email
+ *                 example: user1@mail.com
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *                 example: Loremipsum
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token
+ *       500:
+ *         description: Internal server error
+ */
+route.post('/login', loginUserController); // Rute untuk login
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: User's email
+ *                 example: user1@mail.com
+ *               password:
+ *                 type: string
+ *                 description: User's password
+ *                 example: Loremipsum
+ *               nisn:
+ *                 type: string
+ *                 description: User's NISN
+ *                 example: 1720001
+ *               noWa:
+ *                 type: string
+ *                 description: User's WhatsApp number
+ *                 example: 083182647716
+ *               roleId:
+ *                 type: integer
+ *                 description: User's role ID
+ *                 example: 2
+ *               username:
+ *                 type: string
+ *                 description: User's username
+ *                 example: rahmatnur89
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ */
+route.post('/register', registerUserController); // Rute untuk registrasi
 
 /**
  * @swagger
@@ -153,88 +236,4 @@ route.put('/users',updateUserController);
  *         description: Internal server error
  */
 route.delete('/users/:uid', deleteUserController);
-/**
- * @swagger
- * /api/login:
- *   post:
- *     summary: Log in a user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email
- *                 example: user1@mail.com
- *               password:
- *                 type: string
- *                 description: User's password
- *                 example: Loremipsum
- *     responses:
- *       200:
- *         description: User logged in successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   description: JWT token
- *       500:
- *         description: Internal server error
- */
-route.post('/login', loginUserController); // Rute untuk login
-/**
- * @swagger
- * /api/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email
- *                 example: user1@mail.com
- *               password:
- *                 type: string
- *                 description: User's password
- *                 example: Loremipsum
- *               nisn:
- *                 type: string
- *                 description: User's NISN
- *                 example: 1720001
- *               noWa:
- *                 type: string
- *                 description: User's WhatsApp number
- *                 example: 083182647716
- *               roleId:
- *                 type: integer
- *                 description: User's role ID
- *                 example: 2
- *               username:
- *                 type: string
- *                 description: User's username
- *                 example: rahmatnur89
- *     responses:
- *       201:
- *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       500:
- *         description: Internal server error
- */
-route.post('/register', registerUserController); // Rute untuk registrasi
 module.exports=route;
