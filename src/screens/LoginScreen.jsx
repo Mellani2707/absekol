@@ -11,10 +11,12 @@ import {
 import LoginButton from '../component/LoginButton';
 import TextInputEmail from '../component/TextInputEmail';
 import Menu from '../component/Menu';
-
+import {useDispatch} from 'react-redux';
+import {setUser} from '../redux/actions';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   // const handleLogin = () => {
   //   fetch('http://192.168.179.117:8000/api/login', {
@@ -69,7 +71,7 @@ const LoginScreen = ({navigation}) => {
           console.log('Check user Data----------------------');
           console.log(userdata);
           console.log('----------------end');
-
+          dispatch(setUser(userdata));
           if (userdata.Role) {
             if (userdata.Role.roleName == 'Guru') {
               Alert.alert(

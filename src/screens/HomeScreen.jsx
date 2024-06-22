@@ -1,8 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
+  const user = useSelector(state => state.user);
+  console.log('============Check data user from redux========================');
+  console.log(user);
+  console.log('====================================');
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -15,13 +20,18 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.profile}>
-          <Image source={require('../image/imel.jpeg')} style={styles.profilePic} />
+          <Image
+            source={require('../image/imel.jpeg')}
+            style={styles.profilePic}
+          />
           <View>
             <Text style={styles.profileName}>Ria Amanda</Text>
             <Text style={styles.profileNumber}>09997765655</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.notificationButton} onPress={() => navigation.navigate('Notification')}>
+        <TouchableOpacity
+          style={styles.notificationButton}
+          onPress={() => navigation.navigate('Notification')}>
           <Icon name="notifications-outline" size={30} color="#fff" />
         </TouchableOpacity>
       </View>
@@ -103,7 +113,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -160,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -192,7 +202,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
