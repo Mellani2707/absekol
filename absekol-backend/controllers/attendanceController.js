@@ -1,4 +1,4 @@
-const { createAttendance,getAttendance,updateAttendance, deleteAttendance} = require('../services/attendanceServices');
+const { createAttendance,getAttendance,updateAttendance, deleteAttendance,getTopAttendanceByNisn} = require('../services/attendanceServices');
 
 const getAttendanceController = async (req, res) => {
     try {
