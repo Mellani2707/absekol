@@ -2,6 +2,7 @@ const Attendance = require('../models/Attendance');
 const Student = require('../models/Student');
 const User = require('../models/User');
 const Role = require('../models/Role');
+const { Op } = require('sequelize');
 const getAttendance = async () => {
     try {
         const result = await Attendance.findAll({
