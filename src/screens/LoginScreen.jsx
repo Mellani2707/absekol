@@ -53,9 +53,6 @@ const LoginScreen = ({navigation}) => {
       }),
     })
       .then(response => {
-        console.log('respond----------------------');
-        console.log(response);
-        console.log('----------------end');
         if (response.ok) {
           // response.ok memeriksa apakah status code adalah 2xx
           return response.json();
@@ -67,7 +64,24 @@ const LoginScreen = ({navigation}) => {
       })
       .then(data => {
         Alert.alert('Success', 'User logged in successfully');
-        navigation.navigate('Home'); // Navigasi ke halaman Home
+        const userdata = data.token.user;
+        if (userdata) {
+          console.log('Check user Data----------------------');
+          console.log(userdata);
+          console.log('----------------end');
+
+          if (userdata.Role) {
+            if (userdata.Role.roleName == 'Guru') {
+              Alert.alert(
+                'Success',
+                `User logged in successfully as ${userdata.Role.roleName}`,
+              );
+              navigation.navigate('HomeGuru'); // Navigasi ke halaman Home
+            } else {
+              navigation.navigate('Home'); // Navigasi ke halaman
+            }
+          }
+        }
       })
       .catch(error => {
         Alert.alert('Error', 'An error occurred: ' + error.message);
