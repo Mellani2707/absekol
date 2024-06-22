@@ -19,7 +19,14 @@ const loginUser = async (content) => {
                 { noWa: content.username }
             ]
         },
-        include: [{ model: Role, attributes: ['roleName'] }] // Include role name
+        include: [
+            {
+                model: Student
+            },
+            {
+                model: Role
+            }
+        ] // Include role name
     });
     if (!user) {
         throw new Error('User not found');
