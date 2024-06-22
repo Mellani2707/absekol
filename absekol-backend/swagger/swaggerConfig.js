@@ -10,8 +10,8 @@ const options = {
         },
         servers: [
             {
-                // url: 'http://localhost:3002',
-                url: 'https://absekol-api.numpang.my.id',
+                url: 'http://localhost:3002',
+                // url: 'https://absekol-api.numpang.my.id',
             },
         ],
     },

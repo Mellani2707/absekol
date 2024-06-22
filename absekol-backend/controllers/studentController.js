@@ -1,5 +1,4 @@
 const Services = require('../services/studentServices');
-
 const createStudentController=async(req,res)=>{
     try {
         const raw = req.body;
@@ -12,6 +11,7 @@ const createStudentController=async(req,res)=>{
         });
     }
 }
+
 const getStudentController=async(req,res)=>{
     try {
         const result=await Services.getStudent();

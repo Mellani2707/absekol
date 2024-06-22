@@ -21,7 +21,7 @@ const Student=sequelize.define('Student',
     tanggalLahir:{
         type:DataTypes.DATEONLY
     },
-    almamat:{
+    alamat:{
         type:DataTypes.STRING
     },
     hpOrtu:{

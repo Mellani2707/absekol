@@ -1,7 +1,59 @@
 const express = require('express');
-const {creatUserController,deleteUserController,getUserController,updateUserController,}=require('../controllers/userController')
+const {creatUserController,
+    deleteUserController,
+    getUserController,
+    updateUserController,loginUserController,registerUserController}=require('../controllers/userController')
 
 const route = express.Router();
+const authenticateToken = require('../config/authMiddleware');
+const {authorizeRoles,authorizeRole} = require('../config/authorizeRole');
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - email
+ *         - password
+ *         - noWa
+ *         - roleId
+ *       properties:
+ *         uid:
+ *           type: integer
+ *           description: The auto-generated ID of the user
+ *         username:
+ *           type: string
+ *           description: The user's username
+ *         email:
+ *           type: string
+ *           description: The user's email
+ *         emailVerifiedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The time the user's email was verified
+ *         password:
+ *           type: string
+ *           description: The user's password
+ *         nisn:
+ *           type: string
+ *           description: The user's NISN
+ *         token:
+ *           type: string
+ *           description: The user's token
+ *         noWa:
+ *           type: string
+ *           description: The user's WhatsApp number
+ *         roleId:
+ *           type: integer
+ *           description: The ID of the user's role
+ *         tokenExpired:
+ *           type: string
+ *           format: date-time
+ *           description: The time the user's token expires
+ */
 
 
 /**
@@ -9,170 +61,104 @@ const route = express.Router();
  * /api/users:
  *   post:
  *     summary: Create a new user
- *     description: Add a new user to the database with the provided details.
- *     tags:
- *       - Users
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: The user's email
- *                 example: user10@mail.com
- *               username:
- *                 type: string
- *                 description: The user's username
- *                 example: user1
- *               password:
- *                 type: string
- *                 description: The user's password
- *                 example: Loremipsum
- *               noWa:
- *                 type: string
- *                 description: The user's WhatsApp number
- *                 example: 083182647716
- *               roleId:
- *                 type: integer
- *                 description: The role ID assigned to the user
- *                 example: 2
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
  *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 uid:
- *                   type: integer
- *                   description: The user ID
- *                   example: 1
- *                 email:
- *                   type: string
- *                   description: The user's email
- *                   example: user10@mail.com
- *                 username:
- *                   type: string
- *                   description: The user's username
- *                   example: user1
- *                 noWa:
- *                   type: string
- *                   description: The user's WhatsApp number
- *                   example: 083182647716
- *                 roleId:
- *                   type: integer
- *                   description: The role ID assigned to the user
- *                   example: 2
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                   description: The creation date of the user
- *                   example: 2024-05-22T14:48:00.000Z
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
- *                   description: The last update date of the user
- *                   example: 2024-05-22T14:48:00.000Z
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "Invalid input data"
  *       500:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "An error occurred while creating the user"
  */
-
 route.post('/users', creatUserController);
-
 /**
  * @swagger
  * /api/users:
  *   get:
- *     summary: Retrieve a list of users
- *     description: Retrieve a list of users from the database. This can be used to populate a list of users for management or display purposes.
- *     tags:
- *       - Users
+ *     summary: Get all users
+ *     tags: [Users]
  *     responses:
  *       200:
- *         description: A list of users
+ *         description: List of users
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   uid:
- *                     type: integer
- *                     description: The user ID
- *                     example: 1
- *                   username:
- *                     type: string
- *                     description: The user's username
- *                     example: johndoe
- *                   email:
- *                     type: string
- *                     description: The user's email
- *                     example: johndoe@example.com
- *                   emailVerifiedAt:
- *                     type: string
- *                     format: date-time
- *                     description: The date and time when the user's email was verified
- *                     example: 2021-05-05T14:48:00.000Z
- *                   password:
- *                     type: string
- *                     description: The user's password (hashed)
- *                     example: $2b$10$K7QeK3sL2T9jlXziJ1G/5e
- *                   nisn:
- *                     type: string
- *                     description: The user's NISN
- *                     example: 1234567890
- *                   token:
- *                     type: integer
- *                     description: The user's token
- *                     example: 1234
- *                   noWa:
- *                     type: string
- *                     description: The user's WhatsApp number
- *                     example: +628123456789
- *                   roleId:
- *                     type: integer
- *                     description: The role ID assigned to the user
- *                     example: 2
- *                   tokenEpired:
- *                     type: string
- *                     format: date-time
- *                     description: The date and time when the user's token expires
- *                     example: 2021-05-05T14:48:00.000Z
- */
-route.get('/users', getUserController);
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Internal server error
+ *//**
+* @swagger
+* /api/users:
+*   get:
+*     summary: Get all users
+*     tags: [Users]
+*     responses:
+*       200:
+*         description: List of users
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 $ref: '#/components/schemas/User'
+*       500:
+*         description: Internal server error
+*/
+
+route.get('/users', authenticateToken, authorizeRole('Admin'), getUserController);
+// route.get('/users', authenticateToken, authorizeRoles(['Admin', 'Guru']), getUserController);
+
 /**
  * @swagger
  * /api/users:
  *   put:
- *     summary: Update an existing user
- *     description: Update the details of an existing user with the provided data.
- *     tags:
- *       - Users
+ *     summary: Update a user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       201:
+ *         description: User updated successfully
+ *       500:
+ *         description: Internal server error
+ */
+route.put('/users',updateUserController);
+/**
+ * @swagger
+ * /api/users/{uid}:
+ *   delete:
+ *     summary: Delete a user by UID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: uid
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The UID of the user
+ *     responses:
+ *       204:
+ *         description: User deleted successfully
+ *       500:
+ *         description: Internal server error
+ */
+route.delete('/users/:uid', deleteUserController);
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags: [Users]
  *     requestBody:
  *       required: true
  *       content:
@@ -180,157 +166,75 @@ route.get('/users', getUserController);
  *           schema:
  *             type: object
  *             properties:
- *               uid:
- *                 type: integer
- *                 description: The user ID
- *                 example: 1
  *               email:
  *                 type: string
- *                 description: The user's email
- *                 example: user8@mail.com
- *               username:
- *                 type: string
- *                 description: The user's username
- *                 example: rahmatnur89
+ *                 description: User's email
+ *                 example: user1@mail.com
  *               password:
  *                 type: string
- *                 description: The user's password
+ *                 description: User's password
+ *                 example: Loremipsum
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token
+ *       500:
+ *         description: Internal server error
+ */
+route.post('/login', loginUserController); // Rute untuk login
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: User's email
+ *                 example: user1@mail.com
+ *               password:
+ *                 type: string
+ *                 description: User's password
  *                 example: Loremipsum
  *               nisn:
  *                 type: string
- *                 description: The user's NISN
+ *                 description: User's NISN
  *                 example: 1720001
  *               noWa:
  *                 type: string
- *                 description: The user's WhatsApp number
+ *                 description: User's WhatsApp number
  *                 example: 083182647716
  *               roleId:
  *                 type: integer
- *                 description: The role ID assigned to the user
+ *                 description: User's role ID
  *                 example: 2
+ *               username:
+ *                 type: string
+ *                 description: User's username
+ *                 example: rahmatnur89
  *     responses:
- *       200:
- *         description: User updated successfully
+ *       201:
+ *         description: User registered successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 uid:
- *                   type: integer
- *                   description: The user ID
- *                   example: 1
- *                 email:
- *                   type: string
- *                   description: The user's email
- *                   example: user8@mail.com
- *                 username:
- *                   type: string
- *                   description: The user's username
- *                   example: rahmatnur89
- *                 nisn:
- *                   type: string
- *                   description: The user's NISN
- *                   example: 1720001
- *                 noWa:
- *                   type: string
- *                   description: The user's WhatsApp number
- *                   example: 083182647716
- *                 roleId:
- *                   type: integer
- *                   description: The role ID assigned to the user
- *                   example: 2
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
- *                   description: The last update date of the user
- *                   example: 2024-05-22T14:48:00.000Z
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "Invalid input data"
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "User not found"
+ *               $ref: '#/components/schemas/User'
  *       500:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "An error occurred while updating the user"
  */
-route.put('/users',updateUserController);
-/**
- * @swagger
- * /api/users/{id}:
- *   delete:
- *     summary: Delete a user
- *     description: Delete a user by their ID.
- *     tags:
- *       - Users
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: The ID of the user to delete
- *     responses:
- *       200:
- *         description: User deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Success message
- *                   example: "User deleted successfully"
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "User not found"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *                   example: "An error occurred while deleting the user"
- */
-route.delete('/users/:uid', deleteUserController);
-
-
+route.post('/register', registerUserController); // Rute untuk registrasi
 module.exports=route;

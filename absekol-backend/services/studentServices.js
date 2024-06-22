@@ -11,6 +11,19 @@ const createStudent = async (raw) => {
         throw error.errors ? error : new Error(`Error creating : ${error.message}`);
     }
 }
+const checkStudentAvailability = async (nisn) => {
+    try {
+        const student = await Student.findOne({
+            where: { nisn }
+        });
+        if (!student) {
+            return false
+        }
+        return true;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error creating : ${error.message}`);
+    }
+}
 const getStudent = async () => {
     try {
         const students = await Student.findAll(
@@ -53,4 +66,4 @@ const deleteStudent = async (nisn) => {
         throw error.errors ? error : new Error(`Error deleting: ${error.message}`);
     }
 }
-module.exports = { createStudent, getStudent, updateStudent, deleteStudent }
+module.exports = { createStudent, getStudent, updateStudent, deleteStudent, checkStudentAvailability }
