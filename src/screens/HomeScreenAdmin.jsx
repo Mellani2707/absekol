@@ -1,43 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
-import {FetchData} from '../API/FetchData';
-import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 
-const maleImage = require('../image/L.png');
-const femaleImage = require('../image/P.png');
-
-const HomeScreen = ({navigation}) => {
-  const user = useSelector(state => state.user);
-  const userData = user.user;
-  const userStudentData = user.user.Student;
-  const profileImage =
-    userStudentData.jenisKelamin === 'L' ? maleImage : femaleImage;
-
-  const [lastCheckIn, setLastCheckIn] = useState({});
-  const [lastCheckOut, setLastCheckOut] = useState({});
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchInfoAbsen(userStudentData.nisn);
-  }, []);
-
-  const fetchInfoAbsen = async nisn => {
-    setLoading(true);
-    try {
-      const result = await FetchData(
-        'https://absekol-api.numpang.my.id/api/attendanceInfo/' + nisn,
-      );
-      setLastCheckIn(result.checkInTop);
-      setLastCheckOut(result.checkOutTop);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const HomeScreenAdmin = ({navigation}) => {
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -50,12 +15,13 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
         <View style={styles.profile}>
-          <Image source={profileImage} style={styles.profilePic} />
+          <Image
+            source={require('../image/imel.jpeg')}
+            style={styles.profilePic}
+          />
           <View>
-            <Text style={styles.profileName}>
-              {userStudentData ? userStudentData.nama : userData.username}
-            </Text>
-            <Text style={styles.profileNumber}>{userData.noWa}</Text>
+            <Text style={styles.profileName}>Ria Amanda</Text>
+            <Text style={styles.profileNumber}>09997765655</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -69,37 +35,27 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.button}>
           <Icon name="log-in-outline" size={40} color="#4CAF50" />
-          <Text style={styles.buttonText}>Absensi Masuk</Text>
+          <Text style={styles.buttonText}>Laporan Absensi Siswa</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Icon name="log-out-outline" size={40} color="#E91E63" />
-          <Text style={styles.buttonText}>Absensi Pulang</Text>
+          <Text style={styles.buttonText}>Laporan Notifikasi Absensi</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Icon name="log-out-outline" size={40} color="#E91E63" />
+          <Text style={styles.buttonText}>Laporan GPS Palsu</Text>
         </TouchableOpacity>
       </View>
 
       {/* Information */}
       <View style={styles.infoContainer}>
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Absensi Masuk</Text>
-          <Text style={styles.infoText}>
-            {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
-          </Text>
-        </View>
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Absensi Keluar</Text>
-          <Text style={styles.infoText}>
-            {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
-          </Text>
+          <Text style={styles.infoTitle}>Jumlah Siswa Masuk Hari Ini</Text>
+          <Text style={styles.infoText}>-</Text>
         </View>
       </View>
 
       {/* Map */}
-      <View style={styles.mapContainer}>
-        <Text style={styles.mapTitle}>Lokasi Saat ini</Text>
-        <View style={styles.mapPlaceholder}>
-          <Text>Map Placeholder</Text>
-        </View>
-      </View>
     </View>
   );
 };
@@ -173,6 +129,7 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginVertical: 20,
     paddingHorizontal: 20,
@@ -181,6 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     padding: 15,
+    marginTop: 15,
     borderRadius: 10,
     width: '45%',
     borderColor: '#ccc',
@@ -242,4 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default HomeScreenAdmin;

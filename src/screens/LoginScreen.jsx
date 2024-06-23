@@ -73,14 +73,27 @@ const LoginScreen = ({navigation}) => {
           console.log('----------------end');
           dispatch(setUser(userdata));
           if (userdata.Role) {
-            if (userdata.Role.roleName == 'Guru') {
+            if (
+              userdata.Role.roleName == 'Guru' ||
+              userdata.Role.roleName == 'guru'
+            ) {
               Alert.alert(
                 'Success',
                 `User logged in successfully as ${userdata.Role.roleName}`,
               );
               navigation.navigate('HomeGuru'); // Navigasi ke halaman Home
-            } else {
+            } else if (
+              userdata.Role.roleName == 'Siswa' ||
+              userdata.Role.roleName == 'siswa'
+            ) {
               navigation.navigate('Home'); // Navigasi ke halaman
+            } else if (
+              userdata.Role.roleName == 'Admin' ||
+              userdata.Role.roleName == 'admin'
+            ) {
+              navigation.navigate('Home'); // Navigasi ke halaman
+            } else {
+              navigation.navigate('HomeEmpty'); // Navigasi ke halaman
             }
           }
         }

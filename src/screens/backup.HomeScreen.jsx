@@ -4,25 +4,21 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData';
 import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
-
 const maleImage = require('../image/L.png');
 const femaleImage = require('../image/P.png');
-
 const HomeScreen = ({navigation}) => {
-  const user = useSelector(state => state.user);
-  const userData = user.user;
-  const userStudentData = user.user.Student;
-  const profileImage =
-    userStudentData.jenisKelamin === 'L' ? maleImage : femaleImage;
-
   const [lastCheckIn, setLastCheckIn] = useState({});
   const [lastCheckOut, setLastCheckOut] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const user = useSelector(state => state.user);
+  const userData = user.user;
+  const userStudentData = user.user.Student;
+  const profileImage =
+    userStudentData.jenisKelamin === 'P' ? femaleImage : maleImage;
   useEffect(() => {
     fetchInfoAbsen(userStudentData.nisn);
   }, []);
-
   const fetchInfoAbsen = async nisn => {
     setLoading(true);
     try {
@@ -37,7 +33,6 @@ const HomeScreen = ({navigation}) => {
       setLoading(false);
     }
   };
-
   return (
     <View style={styles.container}>
       {/* Header */}
