@@ -1,5 +1,12 @@
 const express = require('express');
-const { createAttendanceController, getTopAttendanceByNisnController,getAttendanceController,updateAttendanceController,deleteAttendanceController } = require('../controllers/attendanceController')
+const { createAttendanceController, 
+    getTopAttendanceByNisnController,
+    getAttendanceController,
+    updateAttendanceController,
+    deleteAttendanceController,
+    getAttendanceCheckInByNisnController,
+    getAttendanceCheckOutByNisnController
+ } = require('../controllers/attendanceController')
 
 const route = express.Router();
 
