@@ -20,7 +20,7 @@ const HomeScreenGuru = ({navigation}) => {
             style={styles.profilePic}
           />
           <View>
-            <Text style={styles.profileName}>Ria Amanda</Text>
+            <Text style={styles.profileName}>Bu Guru</Text>
             <Text style={styles.profileNumber}>09997765655</Text>
           </View>
         </View>
@@ -43,7 +43,7 @@ const HomeScreenGuru = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
           <Icon name="log-out-outline" size={40} color="#E91E63" />
-          <Text style={styles.buttonText}>Laporan GPS Palsu</Text>
+          <Text style={styles.buttonText}>Daftarkan Siswa</Text>
         </TouchableOpacity>
       </View>
 
@@ -51,6 +51,18 @@ const HomeScreenGuru = ({navigation}) => {
       <View style={styles.infoContainer}>
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>Jumlah Siswa Masuk Hari Ini</Text>
+          <Text style={styles.infoText}>-</Text>
+        </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>
+            Jumlah Siswa Tidak Masuk Hari Ini
+          </Text>
+          <Text style={styles.infoText}>-</Text>
+        </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>
+            Jumlah Siswa Masuk Dengan Lokasi Palsu Hari ini
+          </Text>
           <Text style={styles.infoText}>-</Text>
         </View>
       </View>

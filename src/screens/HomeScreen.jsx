@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData';
+import {HitsData} from '../API/HitsData';
 import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 
 const maleImage = require('../image/L.png');
@@ -37,7 +38,33 @@ const HomeScreen = ({navigation}) => {
       setLoading(false);
     }
   };
+  const handleAbsensi = async type => {
+    try {
+      const currentDate = new Date().toISOString(); // Menghasilkan waktu saat ini dalam format ISO 8601
 
+      let data = {
+        nisn: userStudentData.nisn,
+        isFakeGps: false,
+      };
+
+      if (type == 'out') {
+        data.checkOut = currentDate;
+      } else {
+        data.checkIn = currentDate;
+      }
+      const result = await HitsData(
+        'https://absekol-api.numpang.my.id/api/attendances',
+        data,
+      );
+      Alert.alert('Success', 'Absensi masuk berhasil');
+      fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
+    } catch (error) {
+      Alert.alert(
+        'Error',
+        'An error occurred while taking attendance: ' + error.message,
+      );
+    }
+  };
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -67,26 +94,30 @@ const HomeScreen = ({navigation}) => {
 
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleAbsensi('in')}>
           <Icon name="log-in-outline" size={40} color="#4CAF50" />
-          <Text style={styles.buttonText}>Absensi Masuk</Text>
+          <Text style={styles.buttonText}>Masuk</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => handleAbsensi('out')}>
           <Icon name="log-out-outline" size={40} color="#E91E63" />
-          <Text style={styles.buttonText}>Absensi Pulang</Text>
+          <Text style={styles.buttonText}>Pulang</Text>
         </TouchableOpacity>
       </View>
 
       {/* Information */}
       <View style={styles.infoContainer}>
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Absensi Masuk</Text>
+          <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
           <Text style={styles.infoText}>
             {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
           </Text>
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Absensi Keluar</Text>
+          <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
           <Text style={styles.infoText}>
             {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
           </Text>
