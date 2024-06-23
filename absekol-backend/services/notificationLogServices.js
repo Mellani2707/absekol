@@ -1,9 +1,15 @@
 const NotificationLog = require('../models/notificationLog');
+const Attendance = require('../models/Attendance');
 
 
 const getNotificationLog = async () => {
     try {
-        const result = await NotificationLog.findAll();
+        const result = await NotificationLog.findAll({
+            include: {
+                model: Attendance,
+            }
+
+        });
         return result;
     } catch (error) {
         throw error.errors ? error : new Error(`Error fetchs : ${error.message}`);
@@ -39,4 +45,4 @@ const deleteNotificationLog = async (id) => {
         throw error.errors ? error : new Error(`Error deleting: ${error.message}`);
     }
 }
-module.exports={getNotificationLog,createNotificationLog,updateNotificationLog,deleteNotificationLog}
+module.exports = { getNotificationLog, createNotificationLog, updateNotificationLog, deleteNotificationLog }
