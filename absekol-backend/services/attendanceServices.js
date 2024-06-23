@@ -2,6 +2,7 @@ const Attendance = require('../models/Attendance');
 const Student = require('../models/Student');
 const User = require('../models/User');
 const Role = require('../models/Role');
+const GpsLog = require('../models/GpsLog');
 const { Op } = require('sequelize');
 const getAttendance = async () => {
     try {
@@ -24,8 +25,17 @@ const getAttendance = async () => {
 const createAttendance = async (raw) => {
 
     try {
-        const result = await Attendance.create(raw);
-        return result
+        const resultAttendance = await Attendance.create(raw);
+        if (raw.latitude){
+            const resultGps = await GpsLog.create({
+                attendanceId: resultAttendance.id,
+                longtitude:raw.longtitude,
+                latitude:raw.latitude
+            });
+            return {resultAttendance,resultGps}
+
+        }
+        return resultAttendance
     } catch (error) {
         throw error.errors ? error : new Error(`Error creating : ${error.message}`);
     }
