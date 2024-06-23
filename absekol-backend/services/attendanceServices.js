@@ -6,15 +6,17 @@ const { Op } = require('sequelize');
 const getAttendance = async () => {
     try {
         const result = await Attendance.findAll({
-            include:{
-                model:Student,
-                include:{
-                    model:User,
-                    include:{
-                        model:Role
+            include: [
+                {
+                    model: User,
+                    include: {
+                        model: Student
                     }
+                },
+                {
+                    model: Attendance,
                 }
-            }
+            ]
         });
         return result;
     } catch (error) {
@@ -99,4 +101,4 @@ const getTopAttendanceByNisn = async (nisn) => {
         throw error.errors ? error : new Error(`Error fetching atendance: ${error.message}`);
     }
 };
-module.exports = { getAttendance, createAttendance, updateAttendance, deleteAttendance, getTopAttendanceByNisn}
+module.exports = { getAttendance, createAttendance, updateAttendance, deleteAttendance, getTopAttendanceByNisn }
