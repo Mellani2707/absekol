@@ -1,6 +1,7 @@
 const express = require('express');
 const {
 createNotificationLogController,
+    getNotificationLogByUidController, 
 geteNotificationLogController,
 updateNotificationLogController,
 deleteNotificationLogController
