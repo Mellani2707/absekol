@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData'; // Pastikan Anda telah mengimpor FetchData dengan benar
 
-const NotificationScreen = ({navigation}) => {
+const AbsensiMasukHistoryScreen = ({navigation}) => {
   const user = useSelector(state => state.user);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -12,12 +12,12 @@ const NotificationScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   const userData = user.user;
-
-  const fetchNotifList = async uid => {
+  const studentUserData = userData.Student;
+  const fetchAbsensiList = async nisn => {
     setLoading(true);
     try {
       const result = await FetchData(
-        'https://absekol-api.numpang.my.id/api/notificationLogs/uid/' + uid,
+        `https://absekol-api.numpang.my.id/api/attendances/nisn/${nisn}/checkin`,
       );
       setData(result);
       setFilteredData(result);
@@ -29,8 +29,8 @@ const NotificationScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (userData && userData.uid) {
-      fetchNotifList(userData.uid);
+    if (userData && studentUserData.nisn) {
+      fetchAbsensiList(studentUserData.nisn);
     }
   }, [userData]);
 
@@ -38,7 +38,9 @@ const NotificationScreen = ({navigation}) => {
     setSearchText(text);
     if (text) {
       const newData = data.filter(item => {
-        const itemData = `${item.status.toUpperCase()} ${item.message.toUpperCase()} ${item.receiver.toUpperCase()} ${item.createdAt.toUpperCase()}`;
+        const itemData = `${item.checkIn.toUpperCase()} ${item.isFakeGps
+          .toString()
+          .toUpperCase()}`;
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -49,23 +51,15 @@ const NotificationScreen = ({navigation}) => {
   };
 
   const renderItem = ({item}) => (
-    <View style={styles.notificationItem}>
-      <Icon name="notifications-outline" size={24} color="#6A1B9A" />
-      <View style={styles.notificationDetails}>
-        <Text style={styles.notificationDate}>{item.status}</Text>
-        <View style={styles.notificationTimes}>
+    <View style={styles.absensiItem}>
+      <Icon name="calendar-outline" size={24} color="#6A1B9A" />
+      <View style={styles.absensiDetails}>
+        <Text style={styles.absensiDate}>Check-In: {item.checkIn}</Text>
+        <View style={styles.absensiStatus}>
           <Icon name="checkmark-done-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.receiver}</Text>
-        </View>
-        <View style={styles.notificationTimes}>
-          <Icon name="chatbox-ellipses-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.message}</Text>
-        </View>
-        <View style={styles.notificationTimes}>
-          <Icon name="calendar-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.createdAt}</Text>
-          <Icon name="time-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.createdAt}</Text>
+          <Text style={styles.absensiStatusText}>
+            Fake GPS: {item.isFakeGps ? 'Yes' : 'No'}
+          </Text>
         </View>
       </View>
     </View>
@@ -77,7 +71,7 @@ const NotificationScreen = ({navigation}) => {
       <View style={styles.content}>
         <TextInput
           style={styles.searchBar}
-          placeholder="Search notifications..."
+          placeholder="Search absensi..."
           value={searchText}
           onChangeText={handleSearch}
         />
@@ -85,7 +79,7 @@ const NotificationScreen = ({navigation}) => {
           data={filteredData}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
-          contentContainerStyle={styles.notificationList}
+          contentContainerStyle={styles.absensiList}
         />
       </View>
     </View>
@@ -131,10 +125,10 @@ const styles = StyleSheet.create({
     color: '#000',
     marginBottom: 10,
   },
-  notificationList: {
+  absensiList: {
     paddingBottom: 20,
   },
-  notificationItem: {
+  absensiItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
@@ -148,25 +142,25 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 3,
   },
-  notificationDetails: {
+  absensiDetails: {
     marginLeft: 10,
     flex: 1,
   },
-  notificationDate: {
+  absensiDate: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
-  notificationTimes: {
+  absensiStatus: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
   },
-  notificationTime: {
+  absensiStatusText: {
     fontSize: 14,
     color: '#666',
     marginHorizontal: 5,
   },
 });
 
-export default NotificationScreen;
+export default AbsensiMasukHistoryScreen;

@@ -128,7 +128,7 @@ const HomeScreen = ({navigation}) => {
           </Text>
           <TouchableOpacity
             style={styles.HistoryButton}
-            onPress={() => navigation.navigate('HistoryMasuk')}>
+            onPress={() => navigation.navigate('HistoryKeluar')}>
             <Icon name="timer-outline" size={30} color="#998988" />
           </TouchableOpacity>
         </View>

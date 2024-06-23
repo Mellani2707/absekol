@@ -9,6 +9,8 @@ import HomeScreenGuru from '../screens/HomeScreenGuru';
 import HomeScreenAdmin from '../screens/HomeScreenAdmin';
 import HomeScreenNoRole from '../screens/HomeScreenNoRole';
 import NotificationScreen from '../screens/NotificationScreen';
+import AbsensiMasukHistoryScreen from '../screens/AbsensiMasukHistoryScreen';
+import AbsensiKeluarHistoryScreen from '../screens/AbsensiKeluarHistoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,14 @@ const StackNavigator = () => {
           <Stack.Screen name="HomeAdmin" component={HomeScreenAdmin} />
           <Stack.Screen name="HomeEmpty" component={HomeScreenNoRole} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen
+            name="HistoryMasuk"
+            component={AbsensiMasukHistoryScreen}
+          />
+          <Stack.Screen
+            name="HistoryKeluar"
+            component={AbsensiKeluarHistoryScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
