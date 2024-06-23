@@ -99,4 +99,64 @@ const getTopAttendanceByNisn = async (nisn) => {
         throw error.errors ? error : new Error(`Error fetching atendance: ${error.message}`);
     }
 };
-module.exports = { getAttendance, createAttendance, updateAttendance, deleteAttendance, getTopAttendanceByNisn}
+// Method untuk mendapatkan daftar absensi masuk berdasarkan nisn
+const getAttendanceCheckInByNisn = async (nisn) => {
+    try {
+        const result = await Attendance.findAll({
+            where: {
+                nisn: nisn,
+                checkIn: {
+                    [Op.ne]: null // Pastikan checkIn tidak null
+                }
+            },
+            include: {
+                model: Student,
+                include: {
+                    model: User,
+                    include: {
+                        model: Role
+                    }
+                }
+            },
+            order: [['checkIn', 'DESC']]
+        });
+        return result;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching check-in attendance by nisn: ${error.message}`);
+    }
+};
+
+// Method untuk mendapatkan daftar absensi keluar berdasarkan nisn
+const getAttendanceCheckOutByNisn = async (nisn) => {
+    try {
+        const result = await Attendance.findAll({
+            where: {
+                nisn: nisn,
+                checkOut: {
+                    [Op.ne]: null // Pastikan checkOut tidak null
+                }
+            },
+            include: {
+                model: Student,
+                include: {
+                    model: User,
+                    include: {
+                        model: Role
+                    }
+                }
+            },
+            order: [['checkOut', 'DESC']]
+        });
+        return result;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching check-out attendance by nisn: ${error.message}`);
+    }
+};
+module.exports = { getAttendance, 
+    createAttendance,
+     updateAttendance,
+      deleteAttendance,
+       getTopAttendanceByNisn,
+       getAttendanceCheckInByNisn,
+       getAttendanceCheckOutByNisn
+    }

@@ -1,4 +1,12 @@
-const { createAttendance,getAttendance,updateAttendance, deleteAttendance,getTopAttendanceByNisn} = require('../services/attendanceServices');
+const { 
+    createAttendance,
+    getAttendance,
+    updateAttendance, 
+    deleteAttendance,
+    getTopAttendanceByNisn,
+    getAttendanceCheckInByNisn,
+    getAttendanceCheckOutByNisn
+} = require('../services/attendanceServices');
 
 const getAttendanceController = async (req, res) => {
     try {
@@ -61,7 +69,43 @@ const getTopAttendanceByNisnController = async (req, res) => {
         });
     }
 };
+/**
+ * Controller untuk mendapatkan daftar absensi masuk berdasarkan nisn
+ */
+const getAttendanceCheckInByNisnController = async (req, res) => {
+    try {
+        const { nisn } = req.params;
+        const result = await getAttendanceCheckInByNisn(nisn);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+};
+
+/**
+ * Controller untuk mendapatkan daftar absensi keluar berdasarkan nisn
+ */
+const getAttendanceCheckOutByNisnController = async (req, res) => {
+    try {
+        const { nisn } = req.params;
+        const result = await getAttendanceCheckOutByNisn(nisn);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+};
 module.exports={
     getTopAttendanceByNisnController,
     createAttendanceController,
-    getAttendanceController,updateAttendanceController,deleteAttendanceController}
+    getAttendanceController,
+    updateAttendanceController,
+    deleteAttendanceController,
+    getAttendanceCheckInByNisnController,
+    getAttendanceCheckOutByNisnController
+}
