@@ -1,4 +1,10 @@
-const {createNotificationLog,getNotificationLog,updateNotificationLog,deleteNotificationLog} = require('../services/notificationLogServices');
+const {
+    createNotificationLog,
+    getNotificationLogByUid,
+    getNotificationLog,
+    updateNotificationLog,
+    deleteNotificationLog
+} = require('../services/notificationLogServices');
 
 const geteNotificationLogController = async (req, res) => {
     try {
@@ -46,9 +52,27 @@ const deleteNotificationLogController = async (req, res) => {
         });
     }
 }
-module.exports = { 
-createNotificationLogController,
-geteNotificationLogController,
-updateNotificationLogController,
-deleteNotificationLogController    
+/**
+ * Controller untuk mendapatkan daftar notification log berdasarkan uid
+ */
+const getNotificationLogByUidController = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const result = await getNotificationLogByUid(uid);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+};
+
+module.exports = {
+    getNotificationLogByUidController,
+    createNotificationLogController,
+    geteNotificationLogController,
+    updateNotificationLogController,
+    deleteNotificationLogController,
+    getNotificationLogByUid,
 }

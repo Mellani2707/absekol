@@ -45,4 +45,18 @@ const deleteNotificationLog = async (id) => {
         throw error.errors ? error : new Error(`Error deleting: ${error.message}`);
     }
 }
-module.exports = { getNotificationLog, createNotificationLog, updateNotificationLog, deleteNotificationLog }
+const getNotificationLogByUid = async (uid) => {
+    try {
+        const result = await NotificationLog.findAll({
+            where: { uid },
+            include: {
+                model: Attendance,
+            }
+        });
+        return result;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching: ${error.message}`);
+    }
+};
+
+module.exports = { getNotificationLogByUid,getNotificationLog, createNotificationLog, updateNotificationLog, deleteNotificationLog }

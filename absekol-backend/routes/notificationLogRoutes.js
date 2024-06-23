@@ -117,5 +117,6 @@ route.put('/notificationLogs', updateNotificationLogController);
  *         description: Internal server error
  */
 route.delete('/notificationLogs/:id', deleteNotificationLogController);
-
+// Rute untuk mendapatkan daftar notification log berdasarkan uid
+route.get('/notificationLogs/uid/:uid', getNotificationLogByUidController);
 module.exports = route;
