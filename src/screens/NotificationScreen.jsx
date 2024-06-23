@@ -1,28 +1,65 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {FetchData} from '../API/FetchData'; // Pastikan Anda telah mengimpor FetchData dengan benar
 
-const notifications = [
-  { id: '1', date: 'Rabu, 3 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '2', date: 'Kamis, 4 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '3', date: 'Jumat, 5 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '4', date: 'Sabtu, 6 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '5', date: 'Senen, 8 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '6', date: 'Selasa, 9 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-  { id: '7', date: 'Rabu, 10 Januari 2024', timeIn: '07:30', timeOut: '14:30' },
-];
+const NotificationScreen = ({navigation}) => {
+  const user = useSelector(state => state.user);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-const NotificationScreen = () => {
-  const renderItem = ({ item }) => (
+  const userData = user.user;
+
+  const fetchNotifList = async uid => {
+    setLoading(true);
+    try {
+      const result = await FetchData(
+        'https://absekol-api.numpang.my.id/api/notificationLogs/uid/' + uid,
+      );
+      console.log('----------------Result');
+      console.log(result);
+      console.log('----------------Result End');
+
+      setData(result);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (userData && userData.uid) {
+      fetchNotifList(userData.uid);
+    }
+  }, [userData]);
+
+  const renderItem = ({item}) => (
     <View style={styles.notificationItem}>
-      <Icon name="calendar-outline" size={24} color="#6A1B9A" />
+      <Icon name="notifications-outline" size={24} color="#6A1B9A" />
       <View style={styles.notificationDetails}>
-        <Text style={styles.notificationDate}>{item.date}</Text>
+        <Text style={styles.notificationDate}>{item.status}</Text>
         <View style={styles.notificationTimes}>
+          <Icon name="checkmark-done-outline" size={20} color="#333" />
+          <Text style={styles.notificationTime}>{item.receiver}</Text>
+        </View>
+        <View style={styles.notificationTimes}>
+          <Icon name="chatbox-ellipses-outline" size={20} color="#333" />
+          <Text style={styles.notificationTime}>{item.message}</Text>
+        </View>
+        <View style={styles.notificationTimes}>
+          <Icon name="calendar-outline" size={20} color="#333" />
+          <Text style={styles.notificationTime}>{item.createdAt}</Text>
           <Icon name="time-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.timeIn}</Text>
-          <Icon name="time-outline" size={20} color="#333" />
-          <Text style={styles.notificationTime}>{item.timeOut}</Text>
+          <Text style={styles.notificationTime}>{item.createdAt}</Text>
         </View>
       </View>
     </View>
@@ -30,14 +67,13 @@ const NotificationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-      </View>
+      <View style={styles.header}></View>
       <View style={styles.content}>
         <Text style={styles.sectionTitle}></Text>
         <FlatList
-          data={notifications}
+          data={data}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id.toString()}
           contentContainerStyle={styles.notificationList}
         />
       </View>
@@ -88,7 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.2,
     shadowRadius: 1,
     elevation: 3,

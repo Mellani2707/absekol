@@ -14,7 +14,7 @@ import Menu from '../component/Menu';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../redux/actions';
 const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
@@ -50,7 +50,7 @@ const LoginScreen = ({navigation}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: email,
+        username: username,
         password: password,
       }),
     })
@@ -115,8 +115,8 @@ const LoginScreen = ({navigation}) => {
       </View>
 
       <TextInputEmail
-        state={email}
-        set={setEmail}
+        state={username}
+        set={setUsername}
         icon="envelope"
         placeholder="Masukkan email"
         isPassword={false}

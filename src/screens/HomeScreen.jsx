@@ -115,12 +115,22 @@ const HomeScreen = ({navigation}) => {
           <Text style={styles.infoText}>
             {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
           </Text>
+          <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryMasuk')}>
+            <Icon name="timer-outline" size={30} color="#998988" />
+          </TouchableOpacity>
         </View>
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
           <Text style={styles.infoText}>
             {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
           </Text>
+          <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryMasuk')}>
+            <Icon name="timer-outline" size={30} color="#998988" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -198,6 +208,11 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   notificationButton: {
+    position: 'absolute',
+    top: 20,
+    right: 15,
+  },
+  HistoryButton: {
     position: 'absolute',
     top: 20,
     right: 15,
