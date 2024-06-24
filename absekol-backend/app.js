@@ -40,7 +40,7 @@ const corsOptions = {
 };
 // Routes
 // Rute untuk file handling
-app.use('/api/files', cors(corsOptions), fileRoutes);
+app.use('/api/files', fileRoutes);
 //
 app.use('/api', cors(corsOptions), roleRoutes);
 app.use('/api', cors(corsOptions), userRoutes);
