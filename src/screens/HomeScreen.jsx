@@ -1,10 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+  PermissionsAndroid,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData';
 import {HitsData} from '../API/HitsData';
-import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
+import {KirimNotifWa} from '../API/KirimNotifWa';
+import {
+  IndonesiaTimeConverter,
+  IndonesiaDateOnlyConverter,
+  IndonesiaTimeOnlyConverter,
+} from '../TimeZone/IndonesiaTimeConverter';
+import moment from 'moment-timezone';
+import Geolocation from 'react-native-geolocation-service';
 
 const maleImage = require('../image/L.png');
 const femaleImage = require('../image/P.png');
@@ -18,12 +33,49 @@ const HomeScreen = ({navigation}) => {
 
   const [lastCheckIn, setLastCheckIn] = useState({});
   const [lastCheckOut, setLastCheckOut] = useState({});
+  const [geoPositioningInfo, setGeoPositioningInfo] = useState({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchInfoAbsen(userStudentData.nisn);
   }, []);
-
+  const requestACCESS_FINE_LOCATIONPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Izin Mengakses GPS',
+          message: 'Aplikasi ini harus mengakses Lokasi anda',
+          buttonNeutral: 'Nanti Aja',
+          buttonNegative: 'Batal/Cegah',
+          buttonPositive: 'Izinkan',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Aplikasi Dapat mengakses lokasimu');
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position.mocked);
+            setGeoPositioningInfo({
+              isMocked: position.mocked,
+              la: position.coords.latitude,
+              lo: position.coords.longitude,
+            });
+          },
+          error => {
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        console.log(
+          'Akses lokasi ditolak, aplikasi mungkin tidak dapat digunakan dengan baik',
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const fetchInfoAbsen = async nisn => {
     setLoading(true);
     try {
@@ -32,19 +84,27 @@ const HomeScreen = ({navigation}) => {
       );
       setLastCheckIn(result.checkInTop);
       setLastCheckOut(result.checkOutTop);
+      requestACCESS_FINE_LOCATIONPermission();
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
   const handleAbsensi = async type => {
     try {
-      const currentDate = new Date().toISOString(); // Menghasilkan waktu saat ini dalam format ISO 8601
+      const currentDate = moment().tz('Asia/Jakarta').format(); // Mendapatkan waktu saat ini dalam zona waktu Asia/Jakarta
 
       let data = {
         nisn: userStudentData.nisn,
-        isFakeGps: false,
+        latitude: geoPositioningInfo
+          ? geoPositioningInfo.la
+          : '-0.7318248979259365',
+        longtitude: geoPositioningInfo
+          ? geoPositioningInfo.lo
+          : '100.27058912873801',
+        isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
 
       if (type == 'out') {
@@ -52,12 +112,37 @@ const HomeScreen = ({navigation}) => {
       } else {
         data.checkIn = currentDate;
       }
-      const result = await HitsData(
-        'https://absekol-api.numpang.my.id/api/attendances',
-        data,
-      );
-      Alert.alert('Success', 'Absensi masuk berhasil');
-      fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
+      if (!geoPositioningInfo.isMocked) {
+        const result = await HitsData(
+          'https://absekol-api.numpang.my.id/api/attendances',
+          data,
+        );
+        Alert.alert(
+          'Success',
+          `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`,
+        );
+        fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
+        KirimNotifWa({
+          noWa: userData.noWa,
+          nama: userStudentData.nama,
+          currentDate: currentDate,
+          status: 'absekol_suksess',
+        });
+        KirimNotifWa({
+          noWa: userStudentData.hpOrtu,
+          nama: userStudentData.nama,
+          currentDate: currentDate,
+          status: 'absekol_suksess',
+        });
+      } else {
+        KirimNotifWa({
+          noWa: userData.noWa,
+          nama: userStudentData.nama,
+          currentDate: currentDate,
+          status: 'absekol_gagal',
+        });
+        Alert.alert('Peringatan', 'Lokasi Anda Palsu, Matikan Fake GPS Anda!');
+      }
     } catch (error) {
       Alert.alert(
         'Error',
@@ -65,6 +150,7 @@ const HomeScreen = ({navigation}) => {
       );
     }
   };
+
   return (
     <View style={styles.container}>
       {/* Header */}

@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TextInput, FlatList, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData'; // Pastikan Anda telah mengimpor FetchData dengan benar
+import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 
 const AbsensiKeluarHistoryScreen = ({navigation}) => {
   const user = useSelector(state => state.user);
@@ -54,7 +55,9 @@ const AbsensiKeluarHistoryScreen = ({navigation}) => {
     <View style={styles.absensiItem}>
       <Icon name="calendar-outline" size={24} color="#6A1B9A" />
       <View style={styles.absensiDetails}>
-        <Text style={styles.absensiDate}>Check-Out: {item.checkOut}</Text>
+        <Text style={styles.absensiDate}>
+          Check-Out: {IndonesiaTimeConverter(item.checkOut)}
+        </Text>
         <View style={styles.absensiStatus}>
           <Icon name="checkmark-done-outline" size={20} color="#333" />
           <Text style={styles.absensiStatusText}>

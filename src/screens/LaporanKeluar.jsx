@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData'; // Pastikan Anda telah mengimpor FetchData dengan benar
 import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 
-const AbsensiMasukHistoryScreen = ({navigation}) => {
+const LaporanKeluar = ({navigation}) => {
   const user = useSelector(state => state.user);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -14,11 +14,11 @@ const AbsensiMasukHistoryScreen = ({navigation}) => {
 
   const userData = user.user;
   const studentUserData = userData.Student;
-  const fetchAbsensiList = async nisn => {
+  const fetchAbsensiKeluarList = async nisn => {
     setLoading(true);
     try {
       const result = await FetchData(
-        `https://absekol-api.numpang.my.id/api/attendances/nisn/${nisn}/checkin`,
+        `https://absekol-api.numpang.my.id/api/attendances/nisn/${nisn}/checkout`,
       );
       setData(result);
       setFilteredData(result);
@@ -30,8 +30,8 @@ const AbsensiMasukHistoryScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (userData && studentUserData.nisn) {
-      fetchAbsensiList(studentUserData.nisn);
+    if (true) {
+      fetchAbsensiKeluarList('9999999');
     }
   }, [userData]);
 
@@ -39,7 +39,7 @@ const AbsensiMasukHistoryScreen = ({navigation}) => {
     setSearchText(text);
     if (text) {
       const newData = data.filter(item => {
-        const itemData = `${item.checkIn.toUpperCase()} ${item.isFakeGps
+        const itemData = `${item.checkOut.toUpperCase()} ${item.isFakeGps
           .toString()
           .toUpperCase()}`;
         const textData = text.toUpperCase();
@@ -56,7 +56,7 @@ const AbsensiMasukHistoryScreen = ({navigation}) => {
       <Icon name="calendar-outline" size={24} color="#6A1B9A" />
       <View style={styles.absensiDetails}>
         <Text style={styles.absensiDate}>
-          Check-In: {IndonesiaTimeConverter(item.checkIn)}
+          Check-Out: {IndonesiaTimeConverter(item.checkOut)}
         </Text>
         <View style={styles.absensiStatus}>
           <Icon name="checkmark-done-outline" size={20} color="#333" />
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AbsensiMasukHistoryScreen;
+export default LaporanKeluar;

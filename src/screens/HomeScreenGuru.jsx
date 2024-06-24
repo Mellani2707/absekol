@@ -20,7 +20,7 @@ const HomeScreenGuru = ({navigation}) => {
             style={styles.profilePic}
           />
           <View>
-            <Text style={styles.profileName}>Bu Guru</Text>
+            <Text style={styles.profileName}>Guru Piket</Text>
             <Text style={styles.profileNumber}>09997765655</Text>
           </View>
         </View>
@@ -33,17 +33,17 @@ const HomeScreenGuru = ({navigation}) => {
 
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('LaporanMasuk')}>
           <Icon name="log-in-outline" size={40} color="#4CAF50" />
-          <Text style={styles.buttonText}>Laporan Absensi Siswa</Text>
+          <Text style={styles.buttonText}>Laporan Absensi Masuk Siswa</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('LaporanKeluar')}>
           <Icon name="log-out-outline" size={40} color="#E91E63" />
-          <Text style={styles.buttonText}>Laporan Notifikasi Absensi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Icon name="log-out-outline" size={40} color="#E91E63" />
-          <Text style={styles.buttonText}>Daftarkan Siswa</Text>
+          <Text style={styles.buttonText}>Laporan Absensi Pulang Siswa</Text>
         </TouchableOpacity>
       </View>
 

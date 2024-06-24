@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData'; // Pastikan Anda telah mengimpor FetchData dengan benar
 import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 
-const AbsensiMasukHistoryScreen = ({navigation}) => {
+const LaporanMasuk = ({navigation}) => {
   const user = useSelector(state => state.user);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -30,8 +30,8 @@ const AbsensiMasukHistoryScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    if (userData && studentUserData.nisn) {
-      fetchAbsensiList(studentUserData.nisn);
+    if (true) {
+      fetchAbsensiList('9999999');
     }
   }, [userData]);
 
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AbsensiMasukHistoryScreen;
+export default LaporanMasuk;
