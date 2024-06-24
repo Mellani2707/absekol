@@ -36,34 +36,34 @@ const respondBuilderText = async (body, state = {}, userId) => {
         try {
 
 
-            let config = {
-                method: 'get',
-                maxBodyLength: Infinity,
-                url: 'https://absekol-api.numpang.my.id/api/users/nowa/',
-                headers: {}
-            };
+            // let config = {
+            //     method: 'get',
+            //     maxBodyLength: Infinity,
+            //     url: 'https://absekol-api.numpang.my.id/api/users/nowa/',
+            //     headers: {}
+            // };
 
-            axios.request(config)
-                .then((response) => {
-                    console.log(JSON.stringify(response.data));
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            // axios.request(config)
+            //     .then((response) => {
+            //         console.log(JSON.stringify(response.data));
+            //     })
+            //     .catch((error) => {
+            //         console.log(error);
+            //     });
 
-            // const userResponse = await axios.get('https://absekol-api.numpang.my.id/api/users/nowa/' + userId); // Replace with your API endpoint
-            // const userdata = userResponse.data;
-            // if (userdata != null) {
-            //     responses["infoMenu_1"] = {
-            //         text: `Akun Anda terdaftar pada aplikasi Absekol dengan detail berikut:\nUsername: ${username}\nEmail: ${useremail}\nPassword: ${password}\nRole: ${RoleName}`,
-            //         nextState: "infoMenu"
-            //     };
-            // } else {
-            //     responses["infoMenu_1"] = {
-            //         text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
-            //         nextState: "infoMenu"
-            //     };
-            // }
+            const userResponse = await axios.get('https://absekol-api.numpang.my.id/api/users/nowa/' + userId); // Replace with your API endpoint
+            const userdata = userResponse.data;
+            if (userdata != null) {
+                responses["infoMenu_1"] = {
+                    text: `Akun Anda terdaftar pada aplikasi Absekol dengan detail berikut:\nUsername: ${username}\nEmail: ${useremail}\nPassword: ${password}\nRole: ${RoleName}`,
+                    nextState: "infoMenu"
+                };
+            } else {
+                responses["infoMenu_1"] = {
+                    text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
+                    nextState: "infoMenu"
+                };
+            }
 
         } catch (error) {
             console.error("Error fetching user data:", error);
