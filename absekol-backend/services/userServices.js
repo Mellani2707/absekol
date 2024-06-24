@@ -16,7 +16,8 @@ const loginUser = async (content) => {
             [Op.or]: [
                 { email: content.username },
                 { username: content.username },
-                { noWa: content.username }
+                { noWa: content.username },
+                { nisn: content.username }
             ]
         },
         include: [
