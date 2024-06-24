@@ -44,7 +44,9 @@ export const handleWebhookPost = async (req, res) => {
         console.log(userId);
         console.log('====================================');
 
-        if (message.text.body.toLowerCase() === "home") {
+        const messageText = message?.text?.body || message?.button?.text || "";
+
+        if (messageText.toLowerCase() === "home") {
             await sendTemplateMessage(userId);
             res.sendStatus(200);
             return;
