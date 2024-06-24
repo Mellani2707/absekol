@@ -28,7 +28,7 @@ const respondBuilderText = async (body, state = {}, userId) => {
     console.log('====================================');
 
     const key = `${state.currentState ? state.currentState + "_" : ""}${body}`.trim() || body;
-    console.log('==============Current Key======================');
+    console.log('==============Current Key XX======================');
     console.log(key);
     console.log('====================================');
     // Dynamic user data fetching
