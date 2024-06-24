@@ -29,8 +29,8 @@ const respondBuilderText = async (body, state = {}, userId) => {
     // Dynamic user data fetching
     if (key === 'infoMenu_1') {
         try {
-            const userResponse = await axios.get('https://api.example.com/user'); // Replace with your API endpoint
-            const { username, useremail, password, RoleName } = userResponse.data;
+            const userResponse = await axios.get('/api/users/nowa/' + userId); // Replace with your API endpoint
+            const { username, useremail, password, RoleName,nisn } = userResponse.data;
 
             responses["infoMenu_1"] = {
                 text: `Akun Anda terdaftar pada aplikasi Absekol dengan detail berikut:\nUsername: ${username}\nEmail: ${useremail}\nPassword: ${password}\nRole: ${RoleName}`,
