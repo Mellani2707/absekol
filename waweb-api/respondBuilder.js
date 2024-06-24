@@ -35,7 +35,7 @@ console.log('====================================');
         // Dynamic user data fetching
         if (key === 'infoMenu_1') {
             try {
-                const userResponse = await axios.get('/api/users/nowa/' + userId); // Replace with your API endpoint
+                const userResponse = await axios.get('https://absekol-api.numpang.my.id/api/users/nowa/' + userId); // Replace with your API endpoint
                 const userdata = userResponse.data;
                 if (userdata != null) {
                     responses["infoMenu_1"] = {
