@@ -1,6 +1,6 @@
 const respondBuilderText = (body, state = {}) => {
     const responses = {
-        "registrasi": {
+        "info": {
             text: "Selamat datang! Silakan pilih layanan:\n1. Daftar Layanan Gratis\n2. Daftar Layanan Premium",
             nextState: "registrasiMenu"
         },

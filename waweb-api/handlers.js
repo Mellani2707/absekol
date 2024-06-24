@@ -15,21 +15,14 @@ const setUserState = (userId, state) => userStates.set(userId, state);
 // export const handleTemplatePost= async()=>
 export const handleWebhookPost = async (req, res) => {
     const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-    console.log('=================[1]===================');
-    // console.log(req);
-    console.log('==================[2]==================');
-    console.log('Received message:', message);
-    console.log('===================[3]=================');
-    console.log(WEBHOOK_VERIFY_TOKEN);
-    console.log('====================================');
     if (message?.type === 'text' || message?.type === 'button') {
         const businessPhoneNumberId = req.body.entry?.[0]?.changes?.[0]?.value?.metadata?.phone_number_id;
         const userId = message.from;
+        console.log('===========User ID=========================');
+        console.log(userId);
+        console.log('====================================');
         const userState = getUserState(userId);
         const response = respondBuilderText(message?.type != 'button' ? message.text.body : message.button.text, userState);
-        console.log('==================[4]==================');
-        console.log(response);
-        console.log('====================================');
         try {
             await axiosInstance.post(`${businessPhoneNumberId}/messages`, {
                 messaging_product: 'whatsapp',
