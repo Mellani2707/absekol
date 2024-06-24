@@ -9,6 +9,7 @@ const studentRoutes = require('./routes/studentRouters');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const gpsLogRoutes = require('./routes/gpsLogRoutes');
 const notificationLogRoutes = require('./routes/notificationLogRoutes');
+const fileRoutes = require('./routes/fileRoutes');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./swagger/swaggerConfig');
@@ -18,6 +19,8 @@ const swaggerSpecs = require('./swagger/swaggerConfig');
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 const { PORT } = process.env;
 const port = PORT || 3000;
@@ -36,6 +39,9 @@ const corsOptions = {
     }
 };
 // Routes
+// Rute untuk file handling
+app.use('/api/files', cors(corsOptions), fileRoutes);
+//
 app.use('/api', cors(corsOptions), roleRoutes);
 app.use('/api', cors(corsOptions), userRoutes);
 app.use('/api', cors(corsOptions), studentRoutes);
