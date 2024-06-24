@@ -33,33 +33,38 @@ console.log('==============Current Key======================');
 console.log(key);
 console.log('====================================');
         // Dynamic user data fetching
-        if (key === 'infoMenu_1') {
-            try {
-                const userResponse = await axios.get('https://absekol-api.numpang.my.id/api/users/nowa/' + userId); // Replace with your API endpoint
-                const userdata = userResponse.data;
-                if (userdata != null) {
-                    responses["infoMenu_1"] = {
-                        text: `Akun Anda terdaftar pada aplikasi Absekol dengan detail berikut:\nUsername: ${username}\nEmail: ${useremail}\nPassword: ${password}\nRole: ${RoleName}`,
-                        nextState: "infoMenu"
-                    };
-                } else {
-                    responses["infoMenu_1"] = {
-                        text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
-                        nextState: "infoMenu"
-                    };
-                }
+        // if (key === 'infoMenu_1') {
+        //     try {
 
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                responses["infoMenu_1"] = {
-                    text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
-                    nextState: "infoMenu"
-                };
-            }
-            console.log('================Respind get Menu Info Login====================');
-            console.log(responses["infoMenu_1"]);
-            console.log('====================================');
-        }
+        //         const userResponse = await axios.get('https://absekol-api.numpang.my.id/api/users/nowa/' + userId); // Replace with your API endpoint
+        //         const userdata = userResponse.data;
+        //         if (userdata != null) {
+        //             responses["infoMenu_1"] = {
+        //                 text: `Akun Anda terdaftar pada aplikasi Absekol dengan detail berikut:\nUsername: ${username}\nEmail: ${useremail}\nPassword: ${password}\nRole: ${RoleName}`,
+        //                 nextState: "infoMenu"
+        //             };
+        //         } else {
+        //             responses["infoMenu_1"] = {
+        //                 text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
+        //                 nextState: "infoMenu"
+        //             };
+        //         }
+
+        //     } catch (error) {
+        //         console.error("Error fetching user data:", error);
+        //         responses["infoMenu_1"] = {
+        //             text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
+        //             nextState: "infoMenu"
+        //         };
+        //     }
+        //     console.log('================Respind get Menu Info Login====================');
+        //     console.log(responses["infoMenu_1"]);
+        //     console.log('====================================');
+        // }
+        responses["infoMenu_1"] = {
+            text: "test",
+            nextState: "infoMenu"
+        };
 
         return responses[key] || responses.default;
     } catch (error) {
