@@ -1,48 +1,24 @@
 const respondBuilderText = (body, state = {}) => {
     const responses = {
         "info": {
-            text: "Selamat datang! Silakan pilih layanan:\n1. Daftar Layanan Gratis\n2. Daftar Layanan Premium",
-            nextState: "registrasiMenu"
+            text: "Silakan pilih informasi layanan dengan mengetik angka nomor opsi layanan:\n1. Informasi Login\n2. Informasi Lokiasi Absensi\n3. Informasi Nomor Whatsapp Guru",
+            nextState: "infoMenu"
         },
-        "registrasiMenu_1": {
-            text: "Anda memilih Layanan Gratis. Pilih menu berikut:\n1. Daftarkan karyawan\n2. Blokir Karyawan\n3. Laporan Kehadiran Karyawan\n4. Atur Lokasi Absen",
-            nextState: "gratisMenu"
+        "infoMenu_1": {
+            text: "Akun anda terdaftar pada aplikasi Absekol dengan deatil berikut:\n Username : ${username} \nEmail: {useremail}\nPassword\nRole: {RoleName}",
+            nextState: "infoMenu"
         },
-        "registrasiMenu_2": {
-            text: "Anda memilih Layanan Premium. Pilih menu berikut:\n1. Daftarkan karyawan\n2. Blokir Karyawan\n3. Laporan Kehadiran Karyawan\n4. Atur Lokasi Absen",
-            nextState: "premiumMenu"
+        "infoMenu_2": {
+            text: "Pengambilan absen  wajib [aling jauh didepan gerbang sekolah untuk dapat dianggap sebagai masuk dan berada di area sekolah",
+            nextState: "infoMenu"
         },
-        "gratisMenu_1": {
-            text: "Anda memilih untuk mendaftarkan karyawan. Proses pendaftaran dimulai...",
-            nextState: "registerEmployee"
+        "infoMenu_3": {
+            text: "Berikut nomor kontak guru yang bertanggung jawab dan memonitor aplikasi Absensi: ",
+            nextState: "infoMenu"
         },
-        "gratisMenu_2": {
-            text: "Anda memilih untuk memblokir karyawan. Proses pemblokiran dimulai...",
-            nextState: "blockEmployee"
-        },
-        "gratisMenu_3": {
-            text: "Anda memilih laporan kehadiran karyawan. Mengambil laporan...",
-            nextState: "attendanceReport"
-        },
-        "gratisMenu_4": {
-            text: "Anda memilih untuk mengatur lokasi absen. Mengatur lokasi...",
-            nextState: "setLocation"
-        },
-        "premiumMenu_1": {
-            text: "Anda memilih untuk mendaftarkan karyawan. Proses pendaftaran dimulai...",
-            nextState: "registerEmployee"
-        },
-        "premiumMenu_2": {
-            text: "Anda memilih untuk memblokir karyawan. Proses pemblokiran dimulai...",
-            nextState: "blockEmployee"
-        },
-        "premiumMenu_3": {
-            text: "Anda memilih laporan kehadiran karyawan. Mengambil laporan...",
-            nextState: "attendanceReport"
-        },
-        "premiumMenu_4": {
-            text: "Anda memilih untuk mengatur lokasi absen. Mengatur lokasi...",
-            nextState: "setLocation"
+        "Tentang Kami": {
+            text: "Absekol (Aplikasi Absensi Sekolah) dikembangkan oleh mahasiswa STMIK Jayanusa dengan nomor BP.202007",
+            nextState: state.currentState
         },
         default: {
             text: "Perintah tidak dikenali. Silakan coba lagi.",
