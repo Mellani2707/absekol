@@ -1,4 +1,6 @@
-const { createUser, getUser, deleteUser, updateUser, loginUser, registerUser } = require('../services/userServices');
+const { createUser, getUser, deleteUser, 
+    updateUser, loginUser, registerUser, 
+    getUserByParam } = require('../services/userServices');
 
 const loginUserController = async (req, res) => {
     try {
@@ -32,6 +34,17 @@ const creatUserController = async (req, res) => {
     try {
         const { email, password, nisn, noWa, roleId, username } = req.body;
         const user = await createUser(email, password, nisn, noWa, roleId, username);
+        res.status(201).json(user);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undfined case :" + error.message,
+            errorDetails: error
+        });
+    }
+}
+const getUserByParamController = async (req, res) => {
+    try {
+        const user = await getUserByParam({ noWa: req.params.nowa });
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({
@@ -80,4 +93,4 @@ module.exports = { creatUserController,
     deleteUserController, 
     getUserController, 
     registerUserController, 
-    loginUserController }
+    loginUserController,getUserByParamController }

@@ -181,4 +181,5 @@ const deleteUser = async (uid) => {
         throw error.errors ? error : new Error(`Error deleting: ${error.message}`);
     }
 }
-module.exports = { getUser, createUser, updateUser, deleteUser, loginUser, registerUser }
+module.exports = { getUser, 
+    createUser, updateUser, deleteUser, loginUser, registerUser, getUserByParam }

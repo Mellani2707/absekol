@@ -2,7 +2,7 @@ const express = require('express');
 const {creatUserController,
     deleteUserController,
     getUserController,
-    updateUserController,loginUserController,registerUserController}=require('../controllers/userController')
+    updateUserController, loginUserController, registerUserController, getUserByParamController }=require('../controllers/userController')
 
 const route = express.Router();
 const authenticateToken = require('../config/authMiddleware');
@@ -236,4 +236,9 @@ route.put('/users',updateUserController);
  *         description: Internal server error
  */
 route.delete('/users/:uid', deleteUserController);
+route.post('/users/nowa/:nowa', getUserByParamController);
+// route.post('/users/nisn/:nisn', getUserByParamController);
+// route.post('/users/username/:username', getUserByParamController);
+// route.post('/users/uid/:uid', getUserByParamController);
+
 module.exports=route;
