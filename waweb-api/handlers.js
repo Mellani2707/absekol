@@ -22,7 +22,7 @@ export const handleWebhookPost = async (req, res) => {
         console.log(userId);
         console.log('====================================');
         const userState = getUserState(userId);
-        const response = respondBuilderText(message?.type != 'button' ? message.text.body : message.button.text, userState);
+        const response = respondBuilderText(message?.type != 'button' ? message.text.body : message.button.text, userState, userId);
         try {
             await axiosInstance.post(`${businessPhoneNumberId}/messages`, {
                 messaging_product: 'whatsapp',

@@ -1,4 +1,4 @@
-const respondBuilderText = async (body, state = {}) => {
+const respondBuilderText = async (body, state = {},receiver) => {
     const responses = {
         "info": {
             text: "Silakan pilih informasi layanan dengan mengetik angka nomor opsi layanan:\n1. Informasi Login\n2. Informasi Lokasi Absensi\n3. Informasi Nomor Whatsapp Guru",
@@ -21,10 +21,7 @@ const respondBuilderText = async (body, state = {}) => {
             nextState: state.currentState
         }
     };
-
-    const key = `${state.currentState ? state.currentState + "_" : ""}${body}`.trim() || body;
-
-    if (key === 'infoMenu_1') {
+    if (receiver) {
         try {
             const user = await CallDataUser();
             const { username, email, Role: { roleName } } = user;
@@ -39,7 +36,16 @@ const respondBuilderText = async (body, state = {}) => {
                 nextState: "infoMenu"
             };
         }
+    }else{
+        responses["infoMenu_1"] = {
+            text: "Maaf, terjadi kesalahan saat mengambil data pengguna. Silakan coba lagi nanti.",
+            nextState: "infoMenu"
+        };
     }
+
+    const key = `${state.currentState ? state.currentState + "_" : ""}${body}`.trim() || body;
+
+   
 
     return responses[key] || responses.default;
 };
