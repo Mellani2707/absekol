@@ -236,7 +236,7 @@ route.put('/users',updateUserController);
  *         description: Internal server error
  */
 route.delete('/users/:uid', deleteUserController);
-route.post('/users/nowa/:nowa', getUserByParamController);
+route.get('/users/nowa/:nowa', getUserByParamController);
 // route.post('/users/nisn/:nisn', getUserByParamController);
 // route.post('/users/username/:username', getUserByParamController);
 // route.post('/users/uid/:uid', getUserByParamController);
