@@ -6,24 +6,29 @@ dotenv.config();
 
 const { WEBHOOK_VERIFY_TOKEN } = process.env;
 
-const userStates = new Map(); // Untuk melacak state pengguna
+const userStates = new Map();
 
 const getUserState = (userId) => userStates.get(userId) || { currentState: "" };
-
 const setUserState = (userId, state) => userStates.set(userId, state);
-//create function for send template with param
-// export const handleTemplatePost= async()=>
+
 export const handleWebhookPost = async (req, res) => {
     const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
     if (message?.type === 'text' || message?.type === 'button') {
         const businessPhoneNumberId = req.body.entry?.[0]?.changes?.[0]?.value?.metadata?.phone_number_id;
         const userId = message.from;
+
         console.log('===========User ID=========================');
         console.log(userId);
         console.log('====================================');
+
         const userState = getUserState(userId);
-        const response = respondBuilderText(message?.type != 'button' ? message.text.body : message.button.text, userState, userId);
         try {
+            const response = await respondBuilderText(
+                message?.type !== 'button' ? message.text.body : message.button.text,
+                userState,
+                userId
+            );
+
             await axiosInstance.post(`${businessPhoneNumberId}/messages`, {
                 messaging_product: 'whatsapp',
                 to: userId,
@@ -34,7 +39,7 @@ export const handleWebhookPost = async (req, res) => {
             setUserState(userId, { currentState: response.nextState });
             res.sendStatus(200);
         } catch (error) {
-            console.error('Error sending message:', error);
+            console.error('Error processing message:', error);
             res.sendStatus(500);
         }
     } else {
