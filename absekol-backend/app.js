@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const initializeDatabase = require('./models/initalizeModel')
+const path = require('path');
+
 
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
@@ -40,6 +42,8 @@ const corsOptions = {
 };
 // Routes
 // Rute untuk file handling
+// Middleware untuk melayani file statis dari direktori 'share'
+app.use('/share', express.static(path.join(__dirname, 'share')));
 app.use('/api/files', fileRoutes);
 //
 app.use('/api', cors(corsOptions), roleRoutes);
