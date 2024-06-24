@@ -48,6 +48,7 @@ export const handleWebhookPost = async (req, res) => {
 
         if (messageText.toLowerCase() === "home") {
             await sendTemplateMessage(userId);
+            resetUserState(userId);
             res.sendStatus(200);
             return;
         }
