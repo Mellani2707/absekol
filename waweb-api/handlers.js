@@ -11,6 +11,29 @@ const userStates = new Map();
 const getUserState = (userId) => userStates.get(userId) || { currentState: "" };
 const setUserState = (userId, state) => userStates.set(userId, state);
 
+const sendTemplateMessage = async (userId) => {
+    let data = JSON.stringify({
+        "messaging_product": "whatsapp",
+        "to": userId,
+        "type": "template",
+        "template": {
+            "name": "absensi_intro",
+            "language": {
+                "code": "id"
+            }
+        }
+    });
+
+    try {
+        const response = await axiosInstance.post('269270049609670/messages', data, {
+            headers: { 'Content-Type': 'application/json' }
+        });
+        console.log("Template message sent successfully:", JSON.stringify(response.data));
+    } catch (error) {
+        console.error("Error sending template message:", error);
+    }
+};
+
 export const handleWebhookPost = async (req, res) => {
     const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
     if (message?.type === 'text' || message?.type === 'button') {
@@ -21,11 +44,14 @@ export const handleWebhookPost = async (req, res) => {
         console.log(userId);
         console.log('====================================');
 
+        if (message.text.body.toLowerCase() === "home") {
+            await sendTemplateMessage(userId);
+            res.sendStatus(200);
+            return;
+        }
+
         const userState = getUserState(userId);
         try {
-            console.log('==================Balasan User==================');
-            console.log(message?.type !== 'button' ? message.text.body : message.button.text);
-            console.log('====================================');
             const response = await respondBuilderText(
                 message?.type !== 'button' ? message.text.body : message.button.text,
                 userState,
