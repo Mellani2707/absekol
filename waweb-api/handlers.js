@@ -23,6 +23,9 @@ export const handleWebhookPost = async (req, res) => {
 
         const userState = getUserState(userId);
         try {
+            console.log('==================Balasan User==================');
+            console.log(message?.type !== 'button' ? message.text.body : message.button.text);
+            console.log('====================================');
             const response = await respondBuilderText(
                 message?.type !== 'button' ? message.text.body : message.button.text,
                 userState,
