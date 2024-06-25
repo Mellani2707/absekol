@@ -10,7 +10,7 @@ const userStates = new Map();
 
 const getUserState = (userId) => userStates.get(userId) || { currentState: "" };
 const setUserState = (userId, state) => userStates.set(userId, state);
-
+const resetUserState = (userId) => userStates.delete(userId);
 const sendTemplateMessage = async (userId) => {
     let data = JSON.stringify({
         "messaging_product": "whatsapp",
