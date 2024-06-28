@@ -1,4 +1,5 @@
-const { get, create, deleteByPK, getByPk, getByConfigName } = require('.../services/ConfigAppServices');
+
+const { get, create, deleteByPK, getByPk, getByConfigName } = require('../services/configAppServices');
 
 // Controller untuk mendapatkan semua ConfigApp
 const getAllConfigAppController = async (req, res) => {
