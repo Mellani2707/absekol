@@ -51,7 +51,9 @@ const getNotificationLogByUid = async (uid) => {
             where: { uid },
             include: {
                 model: Attendance,
-            }
+            },
+            order: [['createdAt', 'DESC']],
+
         });
         return result;
     } catch (error) {

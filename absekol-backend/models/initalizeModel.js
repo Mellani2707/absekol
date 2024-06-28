@@ -5,7 +5,7 @@ const Student = require('./Student')
 const Attendance = require('./Attendance');
 const NotificationLog = require('./notificationLog');
 const GpsLog = require('./GpsLog');
-
+const ConfigApp = require('./ConfigApp')
 const initializeDatabase = async()=>{
     try {
         await connectDB();
@@ -15,6 +15,7 @@ const initializeDatabase = async()=>{
         await Attendance.sync();
         await NotificationLog.sync();
         await GpsLog.sync();
+        await ConfigApp.sync();
         console.log('All models were synchronized successfully.');
     } catch (error) {
         console.error(`Unable to synchronize the database:`,error);
