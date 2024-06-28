@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData';
 import {HitsData} from '../API/HitsData';
 import {KirimNotifWa} from '../API/KirimNotifWa';
+import {StoreNotifications} from '../API/StoreNotifications'
 import {
   IndonesiaTimeConverter,
   IndonesiaDateOnlyConverter,
@@ -106,7 +107,13 @@ const HomeScreen = ({navigation}) => {
           : '100.27058912873801',
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
-
+      let dataNotifikasi = {
+        // message: message,
+        // receiver: receiver,
+        // status: status,
+        // attendanceId: attendanceId,
+        uid: userData.uid
+      };
       if (type == 'out') {
         data.checkOut = currentDate;
       } else {
@@ -122,6 +129,14 @@ const HomeScreen = ({navigation}) => {
           `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`,
         );
         fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
+
+        //notifkasi Log disimpan 
+        dataNotifikasi.message = `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`;
+        dataNotifikasi.receiver = userData.noWa;
+        dataNotifikasi.status = "Notifikasi Dikrim  ke Siswa via WhatsApp";
+        StoreNotifications(dataNotifikasi);
+        //end notifikasi
+
         KirimNotifWa({
           noWa: userData.noWa,
           nama: userStudentData.nama,
@@ -134,13 +149,29 @@ const HomeScreen = ({navigation}) => {
           currentDate: currentDate,
           status: 'absekol_suksess',
         });
+        //notifkasi Log disimpan 
+        dataNotifikasi.message = `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`;
+        dataNotifikasi.receiver = userStudentData.hpOrtu;
+        dataNotifikasi.status = "Notifikasi Dikrim  ke Orang Tua via WhatsApp";
+        StoreNotifications(dataNotifikasi);
+        //end notifikasi
       } else {
+
+        
         KirimNotifWa({
           noWa: userData.noWa,
           nama: userStudentData.nama,
           currentDate: currentDate,
           status: 'absekol_gagal',
         });
+
+        //notifkasi Log disimpan 
+        dataNotifikasi.message = "Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!";
+        dataNotifikasi.receiver = userData.noWa;
+        dataNotifikasi.status = "Notifikasi Dikrim  ke Siswa via WhatsApp";
+        StoreNotifications(dataNotifikasi);
+        //end notifikasi
+
         Alert.alert('Peringatan', 'Lokasi Anda Palsu, Matikan Fake GPS Anda!');
       }
     } catch (error) {
