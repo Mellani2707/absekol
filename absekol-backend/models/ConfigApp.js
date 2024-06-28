@@ -24,6 +24,9 @@ const ConfigApp = sequelize.define('ConfigApp',
         },
         value: {
             type: DataTypes.STRING
+        },
+        details:{
+        type: DataTypes.STRING
         }
     },
     {
