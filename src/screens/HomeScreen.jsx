@@ -14,6 +14,7 @@ import {FetchData} from '../API/FetchData';
 import {HitsData} from '../API/HitsData';
 import {KirimNotifWa} from '../API/KirimNotifWa';
 import {StoreNotifications} from '../API/StoreNotifications'
+import getDistance from '../Geolocations/GetRange'
 import {
   IndonesiaTimeConverter,
   IndonesiaDateOnlyConverter,
@@ -97,6 +98,7 @@ const HomeScreen = ({navigation}) => {
     try {
       const currentDate = moment().tz('Asia/Jakarta').format(); // Mendapatkan waktu saat ini dalam zona waktu Asia/Jakarta
 
+
       let data = {
         nisn: userStudentData.nisn,
         latitude: geoPositioningInfo
@@ -107,7 +109,13 @@ const HomeScreen = ({navigation}) => {
           : '100.27058912873801',
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
-      let dataNotifikasi = {
+  const jarakDenganTitikAbsensi= await getDistance(geoPositioningInfo.la, geoPositioningInfo.lo);
+      data.distance = jarakDenganTitikAbsensi;
+      
+      console.log('==============jarak Absensi======================');
+      console.log(jarakDenganTitikAbsensi);
+      console.log('====================================');
+  let dataNotifikasi = {
         // message: message,
         // receiver: receiver,
         // status: status,
