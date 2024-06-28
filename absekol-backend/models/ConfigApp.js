@@ -10,7 +10,17 @@ const ConfigApp = sequelize.define('ConfigApp',
         configName: {
             type: DataTypes.STRING(50),
             allowNull: false,
-            unique:true
+            unique: true,
+            validate: {
+                notEmpty: {
+                    msg: "Config name cannot be empty"
+                },
+                notContainsSpace(value) {
+                    if (/\s/.test(value)) {
+                        throw new Error('Config name cannot contain spaces');
+                    }
+                }
+            }
         },
         value: {
             type: DataTypes.STRING
@@ -20,6 +30,6 @@ const ConfigApp = sequelize.define('ConfigApp',
         tableName: 'ConfigApp',
         timestamps: true
     }
-)
+);
 
 module.exports = ConfigApp;
