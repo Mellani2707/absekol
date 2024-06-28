@@ -27,6 +27,7 @@ const respondBuilderText = (body, state = {}) => {
         }
     };
 
+
     const key = `${state.currentState ? state.currentState + "_" : ""}${body}`.trim() || body;
     console.log('=================[body]===================');
     console.log(body);
@@ -36,5 +37,15 @@ const respondBuilderText = (body, state = {}) => {
     console.log('====================================');
     return responses[key] || responses.default;
 };
+const CallDataUser=async()=>{
+    const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+    };
 
+    fetch("https://absekol-api.numpang.my.id/api/users/nowa/6283182415730", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.error(error));
+}
 export default respondBuilderText;
