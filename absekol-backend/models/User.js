@@ -17,7 +17,7 @@ const User=sequelize.define('User',
             isLowercase: {
                 msg: "please field with lower text format "
             },
-            noSpaces(value) {
+            notContainsSpace(value) {
                 if (/\s/.test(value)) {
                     throw new Error('Name cannot contain spaces');
                 }
