@@ -9,7 +9,8 @@ const ConfigApp = sequelize.define('ConfigApp',
         },
         configName: {
             type: DataTypes.STRING(50),
-            allowNull: false
+            allowNull: false,
+            unique:true
         },
         value: {
             type: DataTypes.STRING

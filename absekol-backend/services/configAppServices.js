@@ -4,43 +4,57 @@ const ConfigApp = require('../models/ConfigApp');
 
 const create = async (content) => {
     try {
-        const role = await Role.create(content);
-        return role;
+        const result = await ConfigApp.create(content);
+        return result;
     } catch (error) {
-        throw new Error(`Error creating role: ${error.message}`);
+        throw new Error(`Error creating data: ${error.message}`);
     }
 }
 const get = async () => {
     try {
-        const roles = await Role.findAll();
-        return roles;
+        const result = await ConfigApp.findAll();
+        return result;
     } catch (error) {
-        throw new Error(`Error fetching roles: ${error.message}`);
+        throw new Error(`Error fetching ConfigApp: ${error.message}`);
     }
 }
 const getByPk = async (id) => {
     try {
-        const role = await Role.findByPk(id);
-        return role;
+        const result = await ConfigApp.findByPk(id);
+        return result;
     } catch (error) {
-        throw new Error(`Error fetching roles: ${error.message}`);
+        throw new Error(`Error fetching ConfigApp: ${error.message}`);
     }
 }
-const deleteByPK = async (idRole) => {
+const deleteByPK = async (id) => {
     try {
-        const role = await Role.findByPk(idRole)
-        if (!role) throw new Error("Role not found");
-        await role.destroy();
+        const result = await ConfigApp.findByPk(id)
+        if (!result) throw new Error("data not found");
+        await result.destroy();
         return true;
     } catch (error) {
-        throw new Error(`Error fetching roles: ${error.message}`);
+        throw new Error(`Error fetching ConfigApp: ${error.message}`);
+    }
+}
+const getByConfigName = async (param) => {
+    try {
+        const result = await ConfigApp.findAll({
+            where: {
+                configName: {
+                    [Op.like]: `%${param}%`
+                }
+            }
+        });
+        return result;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching config: ${error.message}`);
     }
 }
 
 module.exports = {
-    getRole,
-    createRole,
-    deleteRole,
-    getRoleParam,
-    getRoleByPk
+    get,
+     create,
+    deleteByPK,
+    getByPk,
+    getByConfigName
 }
