@@ -15,7 +15,7 @@ const ConfigApp = sequelize.define('ConfigApp',
                 notEmpty: {
                     msg: "Config name cannot be empty"
                 },
-                notContainsSpace(value) {
+                noSpaces(value) {
                     if (/\s/.test(value)) {
                         throw new Error('Config name cannot contain spaces');
                     }

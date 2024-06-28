@@ -21,7 +21,7 @@ const createConfigAppController = async (req, res) => {
         const newConfig = await create(content);
         res.status(201).json(newConfig);
     } catch (error) {
-        res.status(500).json({
+        res.status(400).json({
             errors: error.errors ? error.errors[0].message : "Undefined case: " + error.message,
             errorDetails: error
         });
