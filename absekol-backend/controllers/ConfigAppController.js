@@ -65,7 +65,8 @@ const deleteConfigAppByIdController = async (req, res) => {
 // Controller untuk mendapatkan ConfigApp berdasarkan configName dengan konsep "WHERE configName LIKE '%param%'"
 const getConfigAppByParamController = async (req, res) => {
     try {
-        const { param } = req.query; // Ambil parameter dari query string
+        // const { param } = req.query; 
+        const { param } = req.params;// Ambil parameter dari query string
         const configs = await getByConfigName(param);
         res.status(200).json(configs);
     } catch (error) {
