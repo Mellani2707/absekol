@@ -52,14 +52,16 @@ const getByConfigName = async (param) => {
 }
 const updateByConfigName = async (param, raw) => {
     try {
-        const result = await ConfigApp.findOne({
+        const resultData = await ConfigApp.findOne({
             where: {
                 configName: {
                     [Op.like]: `%${param}%`
                 }
             }
         });
+        const result = await Student.findByPk(resultData.id);
         if (!result) new Error(`update failed, data configName:'${param}' not found `)
+        raw.id=
         await ConfigApp.update(raw);
         return ConfigApp;
     } catch (error) {
