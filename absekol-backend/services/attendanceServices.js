@@ -8,13 +8,7 @@ const getAttendance = async () => {
     try {
         const result = await Attendance.findAll({
             include:{
-                model:User,
-                include:{
-                    model:Student,
-                    include:{
-                        model:Role
-                    }
-                }
+                model: Student
             }
         });
         return result;
