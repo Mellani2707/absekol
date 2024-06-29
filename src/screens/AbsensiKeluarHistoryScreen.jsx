@@ -64,6 +64,12 @@ const AbsensiKeluarHistoryScreen = ({navigation}) => {
             Fake GPS: {item.isFakeGps ? 'Yes' : 'No'}
           </Text>
         </View>
+        <View style={styles.absensiStatus}>
+          <Icon name="navigate-outline" size={20} color="#333" />
+          <Text style={styles.absensiStatusText}>
+            Distance: {item.distance + ' m'}
+          </Text>
+        </View>
       </View>
     </View>
   );
