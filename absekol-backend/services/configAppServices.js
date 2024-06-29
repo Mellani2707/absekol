@@ -59,11 +59,11 @@ const updateByConfigName = async (param, raw) => {
                 }
             }
         });
-        const result = await ConfigApp.findByPk(resultData.id);
-        if (!result) new Error(`update failed, data configName:'${param}' not found `)
-        raw.id=result.id;
-        await ConfigApp.update(raw);
-        return ConfigApp;
+
+        if (!resultData) throw new Error(`update failed, data configName:'${param}' not found`);
+
+        await resultData.update(raw);
+        return resultData;
     } catch (error) {
         throw error.errors ? error : new Error(`Error updating config: ${error.message}`);
     }
