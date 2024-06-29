@@ -13,8 +13,8 @@ import {useSelector} from 'react-redux';
 import {FetchData} from '../API/FetchData';
 import {HitsData} from '../API/HitsData';
 import {KirimNotifWa} from '../API/KirimNotifWa';
-import {StoreNotifications} from '../API/StoreNotifications'
-import getDistance from '../Geolocations/getDistance'
+import {StoreNotifications} from '../API/StoreNotifications';
+import {getDistance} from '../Geolocations/getDistance';
 import {
   IndonesiaTimeConverter,
   IndonesiaDateOnlyConverter,
@@ -98,7 +98,6 @@ const HomeScreen = ({navigation}) => {
     try {
       const currentDate = moment().tz('Asia/Jakarta').format(); // Mendapatkan waktu saat ini dalam zona waktu Asia/Jakarta
 
-
       let data = {
         nisn: userStudentData.nisn,
         latitude: geoPositioningInfo
@@ -109,18 +108,28 @@ const HomeScreen = ({navigation}) => {
           : '100.27058912873801',
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
-  const jarakDenganTitikAbsensi= await getDistance(geoPositioningInfo.la, geoPositioningInfo.lo);
+      console.log(
+        '=============efore get Distance initiate=======================',
+      );
+      console.log(
+        `The latitude current :${geoPositioningInfo.la} , The lotitude current: ${geoPositioningInfo.lo}`,
+      );
+      console.log('====================================');
+      const jarakDenganTitikAbsensi = await getDistance(
+        geoPositioningInfo.la,
+        geoPositioningInfo.lo,
+      );
       data.distance = jarakDenganTitikAbsensi;
-      
+
       console.log('==============jarak Absensi======================');
       console.log(jarakDenganTitikAbsensi);
       console.log('====================================');
-  let dataNotifikasi = {
+      let dataNotifikasi = {
         // message: message,
         // receiver: receiver,
         // status: status,
         // attendanceId: attendanceId,
-        uid: userData.uid
+        uid: userData.uid,
       };
       if (type == 'out') {
         data.checkOut = currentDate;
@@ -138,10 +147,12 @@ const HomeScreen = ({navigation}) => {
         );
         fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
 
-        //notifkasi Log disimpan 
-        dataNotifikasi.message = `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`;
+        //notifkasi Log disimpan
+        dataNotifikasi.message = `Absensi ${
+          type == 'in' ? 'Masuk' : 'Pulang'
+        } berhasil`;
         dataNotifikasi.receiver = userData.noWa;
-        dataNotifikasi.status = "Notifikasi Dikrim  ke Siswa via WhatsApp";
+        dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
         StoreNotifications(dataNotifikasi);
         //end notifikasi
 
@@ -157,15 +168,15 @@ const HomeScreen = ({navigation}) => {
           currentDate: currentDate,
           status: 'absekol_suksess',
         });
-        //notifkasi Log disimpan 
-        dataNotifikasi.message = `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`;
+        //notifkasi Log disimpan
+        dataNotifikasi.message = `Absensi ${
+          type == 'in' ? 'Masuk' : 'Pulang'
+        } berhasil`;
         dataNotifikasi.receiver = userStudentData.hpOrtu;
-        dataNotifikasi.status = "Notifikasi Dikrim  ke Orang Tua via WhatsApp";
+        dataNotifikasi.status = 'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
         StoreNotifications(dataNotifikasi);
         //end notifikasi
       } else {
-
-        
         KirimNotifWa({
           noWa: userData.noWa,
           nama: userStudentData.nama,
@@ -173,10 +184,11 @@ const HomeScreen = ({navigation}) => {
           status: 'absekol_gagal',
         });
 
-        //notifkasi Log disimpan 
-        dataNotifikasi.message = "Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!";
+        //notifkasi Log disimpan
+        dataNotifikasi.message =
+          'Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!';
         dataNotifikasi.receiver = userData.noWa;
-        dataNotifikasi.status = "Notifikasi Dikrim  ke Siswa via WhatsApp";
+        dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
         StoreNotifications(dataNotifikasi);
         //end notifikasi
 

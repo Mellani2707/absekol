@@ -7,7 +7,7 @@ export const IndonesiaTimeConverter = plainTime => {
   const checkIn = plainTime;
   // Konversi dan format datetime
   const formattedDate = moment(checkIn).format('LLLL');
-  console.log(formattedDate); // Output: Minggu, 23 Juni 2024 08.02
+  // console.log(formattedDate); // Output: Minggu, 23 Juni 2024 08.02
   return formattedDate;
 };
 
@@ -17,7 +17,7 @@ export const IndonesiaDateOnlyConverter = plainTime => {
   moment.locale('id');
   // Konversi dan format hanya tanggal
   const formattedDateOnly = moment(plainTime).format('LL');
-  console.log(formattedDateOnly); // Output: 23 Juni 2024
+  // console.log(formattedDateOnly); // Output: 23 Juni 2024
   return formattedDateOnly;
 };
 
@@ -27,6 +27,6 @@ export const IndonesiaTimeOnlyConverter = plainTime => {
   moment.locale('id');
   // Konversi dan format hanya waktu
   const formattedTimeOnly = moment(plainTime).format('HH.mm');
-  console.log(formattedTimeOnly); // Output: 08.02
+  // console.log(formattedTimeOnly); // Output: 08.02
   return formattedTimeOnly;
 };
