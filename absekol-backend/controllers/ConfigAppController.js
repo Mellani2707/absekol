@@ -1,5 +1,5 @@
 
-const { get, create, deleteByPK, getByPk, getByConfigName } = require('../services/configAppServices');
+const { get, create, deleteByPK, getByPk, getByConfigName, updateByConfigName } = require('../services/configAppServices');
 
 // Controller untuk mendapatkan semua ConfigApp
 const getAllConfigAppController = async (req, res) => {
@@ -76,11 +76,25 @@ const getConfigAppByParamController = async (req, res) => {
         });
     }
 }
+const updateConfigAppByParamController = async (req, res) => {
+    try {
+        // const { param } = req.query; 
+        const { param } = req.body.configName;// Ambil parameter dari query string
+        const configs = await updateByConfigName(param, req.body);
+        res.status(201).json(configs);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "Undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+}
 
 module.exports = {
     getAllConfigAppController,
     createConfigAppController,
     getConfigAppByIdController,
     deleteConfigAppByIdController,
-    getConfigAppByParamController
+    getConfigAppByParamController,
+    updateConfigAppByParamController
 };

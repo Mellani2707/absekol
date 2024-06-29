@@ -50,11 +50,28 @@ const getByConfigName = async (param) => {
         throw error.errors ? error : new Error(`Error fetching config: ${error.message}`);
     }
 }
+const updateByConfigName = async (param, raw) => {
+    try {
+        const result = await ConfigApp.findOne({
+            where: {
+                configName: {
+                    [Op.like]: `%${param}%`
+                }
+            }
+        });
+        if (!result) new Error(`update failed, data configName:'${param}' not found `)
+        await ConfigApp.update(raw);
+        return ConfigApp;
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error updating config: ${error.message}`);
+    }
+}
 
 module.exports = {
     get,
      create,
     deleteByPK,
     getByPk,
-    getByConfigName
+    getByConfigName,
+    updateByConfigName
 }

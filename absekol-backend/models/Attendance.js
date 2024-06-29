@@ -18,6 +18,9 @@ const Attendance = sequelize.define('Attendance',
     isFakeGps:{
         type:DataTypes.BOOLEAN,
     },
+    distance:{
+        type:DataTypes.STRING,
+    },
     nisn:{
         type:DataTypes.STRING(30),
         allowNull:false,
