@@ -177,7 +177,8 @@ const HomeScreen = ({navigation}) => {
             noWa: userStudentData.hpOrtu,
             nama: userStudentData.nama,
             currentDate: currentDate,
-            status: 'absekol_suksess',
+            currentRange: jarakDenganTitikAbsensi,
+            status: 'absekol_sukses_ortu',
           });
           //notifkasi Log disimpan
           dataNotifikasi.message = `Absensi ${
