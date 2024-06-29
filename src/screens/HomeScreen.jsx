@@ -36,6 +36,7 @@ const HomeScreen = ({navigation}) => {
   const [lastCheckIn, setLastCheckIn] = useState({});
   const [lastCheckOut, setLastCheckOut] = useState({});
   const [geoPositioningInfo, setGeoPositioningInfo] = useState({});
+  const [stateRangeAttendance, setStateRangeAttendance] = useState(50);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -109,7 +110,7 @@ const HomeScreen = ({navigation}) => {
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
       console.log(
-        '=============efore get Distance initiate=======================',
+        '=============before get Distance initiate=======================',
       );
       console.log(
         `The latitude current :${geoPositioningInfo.la} , The lotitude current: ${geoPositioningInfo.lo}`,
@@ -121,8 +122,15 @@ const HomeScreen = ({navigation}) => {
       );
       data.distance = jarakDenganTitikAbsensi;
 
-      console.log('==============jarak Absensi======================');
+      console.log(
+        '==============jarak ke lokasi absensi======================',
+      );
       console.log(jarakDenganTitikAbsensi);
+      console.log('====================================');
+      console.log(
+        '=================Jarak maksimal yang ditetpkan===================',
+      );
+      console.log(stateRangeAttendance);
       console.log('====================================');
       let dataNotifikasi = {
         // message: message,
@@ -136,54 +144,77 @@ const HomeScreen = ({navigation}) => {
       } else {
         data.checkIn = currentDate;
       }
+      //jika lokasi asli
       if (!geoPositioningInfo.isMocked) {
-        const result = await HitsData(
-          'https://absekol-api.numpang.my.id/api/attendances',
-          data,
-        );
-        Alert.alert(
-          'Success',
-          `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`,
-        );
-        fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
+        //jika jarak dari lokasi yang ditentukan melebihi nilai batas jaral yang ditentukan ex: 50 m
+        if (jarakDenganTitikAbsensi < stateRangeAttendance) {
+          const result = await HitsData(
+            'https://absekol-api.numpang.my.id/api/attendances',
+            data,
+          );
+          Alert.alert(
+            'Success',
+            `Absensi ${type == 'in' ? 'Masuk' : 'Pulang'} berhasil`,
+          );
+          fetchInfoAbsen(userStudentData.nisn); // Memuat ulang informasi absensi
 
-        //notifkasi Log disimpan
-        dataNotifikasi.message = `Absensi ${
-          type == 'in' ? 'Masuk' : 'Pulang'
-        } berhasil`;
-        dataNotifikasi.receiver = userData.noWa;
-        dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
-        StoreNotifications(dataNotifikasi);
-        //end notifikasi
+          //notifkasi Log disimpan
+          dataNotifikasi.message = `Absensi ${
+            type == 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
+          dataNotifikasi.receiver = userData.noWa;
+          dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
+          StoreNotifications(dataNotifikasi);
+          //end notifikasi
 
-        KirimNotifWa({
-          noWa: userData.noWa,
-          nama: userStudentData.nama,
-          currentDate: currentDate,
-          status: 'absekol_suksess',
-        });
-        KirimNotifWa({
-          noWa: userStudentData.hpOrtu,
-          nama: userStudentData.nama,
-          currentDate: currentDate,
-          status: 'absekol_suksess',
-        });
-        //notifkasi Log disimpan
-        dataNotifikasi.message = `Absensi ${
-          type == 'in' ? 'Masuk' : 'Pulang'
-        } berhasil`;
-        dataNotifikasi.receiver = userStudentData.hpOrtu;
-        dataNotifikasi.status = 'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
-        StoreNotifications(dataNotifikasi);
-        //end notifikasi
-      } else {
+          KirimNotifWa({
+            noWa: userData.noWa,
+            nama: userStudentData.nama,
+            currentDate: currentDate,
+            status: 'absekol_suksess',
+          });
+          KirimNotifWa({
+            noWa: userStudentData.hpOrtu,
+            nama: userStudentData.nama,
+            currentDate: currentDate,
+            status: 'absekol_suksess',
+          });
+          //notifkasi Log disimpan
+          dataNotifikasi.message = `Absensi ${
+            type == 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
+          dataNotifikasi.receiver = userStudentData.hpOrtu;
+          dataNotifikasi.status =
+            'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
+          StoreNotifications(dataNotifikasi);
+          //end notifikasi
+        }
+        //jika jarak terlalu jauh (gagal)
+        else {
+          KirimNotifWa({
+            noWa: userData.noWa,
+            nama: userStudentData.nama,
+            currentDate: currentDate,
+            status: 'absekol_gagal_terlalujauh',
+          });
+          //notifkasi Log disimpan
+          dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
+          dataNotifikasi.receiver = userData.noWa;
+          dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
+          StoreNotifications(dataNotifikasi);
+          //end notifikasi
+
+          Alert.alert('Peringatan', 'Lokasi mu terlalu jauh!');
+        }
+      }
+      //jika lokasi palsu
+      else {
         KirimNotifWa({
           noWa: userData.noWa,
           nama: userStudentData.nama,
           currentDate: currentDate,
           status: 'absekol_gagal',
         });
-
         //notifkasi Log disimpan
         dataNotifikasi.message =
           'Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!';
