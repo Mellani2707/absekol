@@ -52,6 +52,9 @@ const getByConfigName = async (param) => {
 }
 const updateByConfigName = async (raw) => {
     try {
+        console.log('==================Raw==================');
+        console.log(raw);
+        console.log('====================================');
         const resultData = await ConfigApp.findOne({
             where: {
                 configName: {
@@ -59,7 +62,9 @@ const updateByConfigName = async (raw) => {
                 }
             }
         });
-
+console.log('=========Result Data where===========================');
+console.log(resultData);
+console.log('====================================');
         if (!resultData) throw new Error(`update failed, data configName:'${param}' not found`);
 
         await resultData.update(raw);
