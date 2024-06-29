@@ -23,6 +23,6 @@ router.delete('/configs/:id', deleteConfigAppByIdController);
 
 // Mendapatkan ConfigApp berdasarkan parameter
 router.get('/configs/search/:param', getConfigAppByParamController);
-router.get('/configs/update/search', updateConfigAppByParamController);
+router.put('/configs/update/search', updateConfigAppByParamController);
 
 module.exports = router;
