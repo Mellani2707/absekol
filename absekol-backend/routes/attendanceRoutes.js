@@ -5,7 +5,9 @@ const { createAttendanceController,
     updateAttendanceController,
     deleteAttendanceController,
     getAttendanceCheckInByNisnController,
-    getAttendanceCheckOutByNisnController
+    getAttendanceCheckOutByNisnController,
+    getAttendanceCheckInController,
+    getAttendanceCheckOutController
  } = require('../controllers/attendanceController')
 
 const route = express.Router();
@@ -20,6 +22,8 @@ route.get('/attendances/nisn/:nisn/checkin', getAttendanceCheckInByNisnControlle
 
 // Rute untuk mendapatkan daftar absensi keluar berdasarkan nisn
 route.get('/attendances/nisn/:nisn/checkout', getAttendanceCheckOutByNisnController);
+route.get('/attendances/checkout', getAttendanceCheckOutController);
+route.get('/attendances/checkin', getAttendanceCheckInController);
 
 
 module.exports = route;

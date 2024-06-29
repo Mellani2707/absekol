@@ -5,7 +5,9 @@ const {
     deleteAttendance,
     getTopAttendanceByNisn,
     getAttendanceCheckInByNisn,
-    getAttendanceCheckOutByNisn
+    getAttendanceCheckOutByNisn,
+    getAttendanceCheckIn,
+    getAttendanceCheckOut
 } = require('../services/attendanceServices');
 
 const getAttendanceController = async (req, res) => {
@@ -84,6 +86,17 @@ const getAttendanceCheckInByNisnController = async (req, res) => {
         });
     }
 };
+const getAttendanceCheckInController = async (req, res) => {
+    try {
+        const result = await getAttendanceCheckIn();
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+};
 
 /**
  * Controller untuk mendapatkan daftar absensi keluar berdasarkan nisn
@@ -100,6 +113,17 @@ const getAttendanceCheckOutByNisnController = async (req, res) => {
         });
     }
 };
+const getAttendanceCheckOutController = async (req, res) => {
+    try {
+        const result = await getAttendanceCheckOut();
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undefined case: " + error.message,
+            errorDetails: error
+        });
+    }
+};
 module.exports={
     getTopAttendanceByNisnController,
     createAttendanceController,
@@ -107,5 +131,7 @@ module.exports={
     updateAttendanceController,
     deleteAttendanceController,
     getAttendanceCheckInByNisnController,
-    getAttendanceCheckOutByNisnController
+    getAttendanceCheckOutByNisnController,
+    getAttendanceCheckInController,
+    getAttendanceCheckOutController
 }
