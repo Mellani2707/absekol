@@ -14,7 +14,7 @@ import {FetchData} from '../API/FetchData';
 import {HitsData} from '../API/HitsData';
 import {KirimNotifWa} from '../API/KirimNotifWa';
 import {StoreNotifications} from '../API/StoreNotifications'
-import getDistance from '../Geolocations/GetRange'
+import getDistance from '../Geolocations/getDistance'
 import {
   IndonesiaTimeConverter,
   IndonesiaDateOnlyConverter,
