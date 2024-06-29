@@ -34,7 +34,7 @@ const getTargetCoordinates = async () => {
  * @param {number} currentLo - Longitude saat ini.
  * @returns {Promise<number>} - Jarak dalam meter.
  */
-export default const getDistance = async (currentLa, currentLo) => {
+export const getDistance = async (currentLa, currentLo) => {
     const targetCoordinates = await getTargetCoordinates();
     return geolibGetDistance(
         { latitude: currentLa, longitude: currentLo },
