@@ -196,6 +196,8 @@ const HomeScreen = ({navigation}) => {
             nama: userStudentData.nama,
             currentDate: currentDate,
             status: 'absekol_gagal_terlalujauh',
+            currentRange: jarakDenganTitikAbsensi,
+            stateRange: stateRangeAttendance,
           });
           //notifkasi Log disimpan
           dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;

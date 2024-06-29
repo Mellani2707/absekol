@@ -9,7 +9,38 @@ export const KirimNotifWa = param => {
     'Bearer EABrzenWZBbf8BO8pCTRRnybpS0YHhPtVOmUe18jM9GYUqQpvBZBAFE74irxnZCZCCtof0Wbb2MN3qjL51NuV8Vmb8ogBMdRjF5ZBG7hF0SZC5ZCbFW15FNAbc96QFqEQUJ1W9EflXhQ5m1Sj0ZBgBksQP4cYd5WoWK68sppZBQ0YMMthT51FFUuCVocbN0bfSn6Ne',
   );
   myHeaders.append('Content-Type', 'application/json');
+  const dataparam = [
+    //paramater ke {{1}}
+    {
+      type: 'text',
+      text: param.nama,
+    },
+    //paramater ke {{2}}
+    {
+      type: 'text',
+      text: IndonesiaDateOnlyConverter(param.currentDate),
+    },
+    //paramater ke {{3}}
+    {
+      type: 'text',
+      text: IndonesiaTimeOnlyConverter(param.currentDate),
+    },
+  ];
+  //paramater ke {{4}}
+  if (param.currentRange) {
+    dataparam.push({
+      type: 'text',
+      text: param.currentRange,
+    });
+  }
+  //paramater ke {{5}}
 
+  if (param.stateRange) {
+    dataparam.push({
+      type: 'text',
+      text: param.stateRange,
+    });
+  }
   const raw = JSON.stringify({
     messaging_product: 'whatsapp',
     to: param.noWa,
@@ -22,20 +53,7 @@ export const KirimNotifWa = param => {
       components: [
         {
           type: 'body',
-          parameters: [
-            {
-              type: 'text',
-              text: param.nama,
-            },
-            {
-              type: 'text',
-              text: IndonesiaDateOnlyConverter(param.currentDate),
-            },
-            {
-              type: 'text',
-              text: IndonesiaTimeOnlyConverter(param.currentDate),
-            },
-          ],
+          parameters: dataparam,
         },
       ],
     },
