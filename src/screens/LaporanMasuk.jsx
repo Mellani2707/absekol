@@ -18,7 +18,7 @@ const LaporanMasuk = ({navigation}) => {
     setLoading(true);
     try {
       const result = await FetchData(
-        `https://absekol-api.numpang.my.id/api/attendances/nisn/${nisn}/checkin`,
+        `https://absekol-api.numpang.my.id/api/attendances/checkin`,
       );
       setData(result);
       setFilteredData(result);
