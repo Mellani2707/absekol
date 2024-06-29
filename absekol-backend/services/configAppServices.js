@@ -59,7 +59,7 @@ const updateByConfigName = async (param, raw) => {
                 }
             }
         });
-        const result = await Student.findByPk(resultData.id);
+        const result = await ConfigApp.findByPk(resultData.id);
         if (!result) new Error(`update failed, data configName:'${param}' not found `)
         raw.id=
         await ConfigApp.update(raw);
