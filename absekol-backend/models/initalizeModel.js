@@ -12,7 +12,7 @@ const initializeDatabase = async()=>{
         await Role.sync();
         await Student.sync();
         await User.sync();
-        await Attendance.sync();
+        await Attendance.sync({force:true});
         await NotificationLog.sync();
         await GpsLog.sync();
         await ConfigApp.sync();
