@@ -50,12 +50,12 @@ const getByConfigName = async (param) => {
         throw error.errors ? error : new Error(`Error fetching config: ${error.message}`);
     }
 }
-const updateByConfigName = async (param, raw) => {
+const updateByConfigName = async (raw) => {
     try {
         const resultData = await ConfigApp.findOne({
             where: {
                 configName: {
-                    [Op.like]: `%${param}%`
+                    [Op.like]: `%${raw.configName}%`
                 }
             }
         });

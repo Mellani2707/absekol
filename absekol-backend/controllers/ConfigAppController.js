@@ -79,8 +79,7 @@ const getConfigAppByParamController = async (req, res) => {
 const updateConfigAppByParamController = async (req, res) => {
     try {
         // const { param } = req.query; 
-        const { param } = req.body.configName;// Ambil parameter dari query string
-        const configs = await updateByConfigName(param, req.body);
+        const configs = await updateByConfigName(req.body);
         res.status(201).json(configs);
     } catch (error) {
         res.status(500).json({
