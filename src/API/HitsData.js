@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import log from '../utils/Logger'; // Import utilitas logging
 
 export const HitsData = async (url, content, customHeaders = {}) => {
   try {
@@ -17,9 +18,11 @@ export const HitsData = async (url, content, customHeaders = {}) => {
     }
 
     const data = await response.json();
-    Alert.alert('Success', 'Data sent successfully');
+    log('Success', 'Data sent successfully to ' + url);
+
     return data;
   } catch (error) {
+    log('HitsData  Error', error);
     Alert.alert(
       'Error',
       'An error occurred while sending data: ' + error.message,

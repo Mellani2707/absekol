@@ -4,6 +4,8 @@ import {
   IndonesiaDateOnlyConverter,
   IndonesiaTimeOnlyConverter,
 } from '../TimeZone/IndonesiaTimeConverter';
+import log from '../utils/Logger'; // Import utilitas logging
+
 export const KirimNotifWa = async(param) => {
   try {
     const myHeaders = new Headers();
@@ -76,12 +78,12 @@ export const KirimNotifWa = async(param) => {
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.error(error));
-    Alert.alert('Success', 'Kirim notifikasi WhatsApp ' + param.status+' berhasil');
+    log('Success', 'Kirim notifikasi WhatsApp ' + param.status + ' berhasil');
+
 
   } catch (error) {
-    console.log('====================================');
-    console.log(error);
-    console.log('====================================');    
+    log('KirimNotifWa Errror', error);
+   
     Alert.alert(
       'Error',
       'An error occurred while sending data Whats App API: ' + error.message,
