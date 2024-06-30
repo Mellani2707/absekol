@@ -139,15 +139,16 @@ const HomeScreen = ({navigation}) => {
         // attendanceId: attendanceId,
         uid: userData.uid,
       };
-      if (type == 'out') {
-        data.checkOut = currentDate;
-      } else {
-        data.checkIn = currentDate;
-      }
+      
       //jika lokasi asli
       if (!geoPositioningInfo.isMocked) {
         //jika jarak dari lokasi yang ditentukan melebihi nilai batas jaral yang ditentukan ex: 50 m
         if (jarakDenganTitikAbsensi < stateRangeAttendance) {
+          if (type == 'out') {
+            data.checkOut = currentDate;
+          } else {
+            data.checkIn = currentDate;
+          }
           const result = await HitsData(
             'https://absekol-api.numpang.my.id/api/attendances',
             data,
@@ -163,6 +164,7 @@ const HomeScreen = ({navigation}) => {
             type == 'in' ? 'Masuk' : 'Pulang'
           } berhasil`;
           dataNotifikasi.receiver = userData.noWa;
+          dataNotifikasi.attendanceId = result.id;
           dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
           StoreNotifications(dataNotifikasi);
           //end notifikasi
@@ -192,6 +194,10 @@ const HomeScreen = ({navigation}) => {
         }
         //jika jarak terlalu jauh (gagal)
         else {
+          const result = await HitsData(
+            'https://absekol-api.numpang.my.id/api/attendances',
+            data,
+          );
           KirimNotifWa({
             noWa: userData.noWa,
             nama: userStudentData.nama,
@@ -201,8 +207,10 @@ const HomeScreen = ({navigation}) => {
             stateRange: stateRangeAttendance,
           });
           //notifkasi Log disimpan
+          
           dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
           dataNotifikasi.receiver = userData.noWa;
+          dataNotifikasi.attendanceId = result.id;
           dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
           StoreNotifications(dataNotifikasi);
           //end notifikasi
