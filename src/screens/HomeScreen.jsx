@@ -35,8 +35,11 @@ const HomeScreen = ({navigation}) => {
 
   const [lastCheckIn, setLastCheckIn] = useState({});
   const [lastCheckOut, setLastCheckOut] = useState({});
-  const [geoPositioningInfo, setGeoPositioningInfo] = useState({});
-  const [stateRangeAttendance, setStateRangeAttendance] = useState(50);
+
+  //geoPositioningInfo adalah state (variabel)  yang akan menampung informasi yang kita dapatkan dari glib
+  const [geoPositioningInfo, setGeoPositioningInfo] = useState({}); // berrti klw ni gnti disitu sebg?m
+
+  const [stateRangeAttendance, setStateRangeAttendance] = useState(50); //default value stateRangeAttendance 50m
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,9 +59,11 @@ const HomeScreen = ({navigation}) => {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('Aplikasi Dapat mengakses lokasimu');
+        //setelah kita mengizinkan akses lokasi ke perangkat, maka Geolocation library akan mengambil nilai informas lokasi terkini kita, informsi fake gps atau tidaknya kita, informasi kordinat kita. Lalu disimpan kedalam variable geoPositioningInfo dengan menggunakan state
         Geolocation.getCurrentPosition(
           position => {
             console.log(position.mocked);
+            //informasi lokasi kamu dari Geolocation library akan dismpan
             setGeoPositioningInfo({
               isMocked: position.mocked,
               la: position.coords.latitude,
@@ -98,16 +103,14 @@ const HomeScreen = ({navigation}) => {
   const handleAbsensi = async type => {
     try {
       const currentDate = moment().tz('Asia/Jakarta').format(); // Mendapatkan waktu saat ini dalam zona waktu Asia/Jakarta
-
+      //data adalah variabel yang menampung informasi untuk dikirimkan saat melakukan absensi, contoh, informasi isFakeGps didaptkan dari variabel geoPositioningInfo, namun jika geoPositioningInfo tidak ada isinya maka botomatis bernilai false [geoPositioningInfo ? geoPositioningInfo.isMocked : false | operator ? true: false] ini disebtu "operator ternary"
       let data = {
         nisn: userStudentData.nisn,
-        latitude: geoPositioningInfo
-          ? geoPositioningInfo.la
-          : '-0.9999999999',
+        latitude: geoPositioningInfo ? geoPositioningInfo.la : '-0.9999999999',
         longtitude: geoPositioningInfo
           ? geoPositioningInfo.lo
           : '100.999999999',
-        isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
+        isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false, //menggunakan logika if satu baris (operator ternary)
       };
       console.log(
         '=============before get Distance initiate=======================',
@@ -139,10 +142,13 @@ const HomeScreen = ({navigation}) => {
         // attendanceId: attendanceId,
         uid: userData.uid,
       };
-      
+
       //jika lokasi asli
       if (!geoPositioningInfo.isMocked) {
         //jika jarak dari lokasi yang ditentukan melebihi nilai batas jaral yang ditentukan ex: 50 m
+
+        //jarakDenganTitikAbsensi didapatkan hasil API
+        //sedangkan stateRangeAttendance masih statis dari kodingan di ateh ubah nyo
         if (jarakDenganTitikAbsensi < stateRangeAttendance) {
           if (type == 'out') {
             data.checkOut = currentDate;
@@ -207,7 +213,7 @@ const HomeScreen = ({navigation}) => {
             stateRange: stateRangeAttendance,
           });
           //notifkasi Log disimpan
-          
+
           dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
           dataNotifikasi.receiver = userData.noWa;
           dataNotifikasi.attendanceId = result.id;
