@@ -103,10 +103,10 @@ const HomeScreen = ({navigation}) => {
         nisn: userStudentData.nisn,
         latitude: geoPositioningInfo
           ? geoPositioningInfo.la
-          : '-0.7318248979259365',
+          : '-0.9999999999',
         longtitude: geoPositioningInfo
           ? geoPositioningInfo.lo
-          : '100.27058912873801',
+          : '100.999999999',
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
       console.log(
