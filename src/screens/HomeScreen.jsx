@@ -92,9 +92,9 @@ const HomeScreen = ({navigation}) => {
       setLastCheckIn(result.checkInTop);
       setLastCheckOut(result.checkOutTop);
       await requestACCESS_FINE_LOCATIONPermission();
-      // if (geoPositioningInfo.la) {
-      //   await GeocationsInfo();
-      // }
+      if (geoPositioningInfo.la) {
+        await GeocationsInfo();
+      }
     } catch (error) {
       log('Fetch Info Error', error);
     } finally {
@@ -103,7 +103,10 @@ const HomeScreen = ({navigation}) => {
   };
 
   const GeocationsInfo = async () => {
-    log('jarak saat ini', `Kordinat paramter la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`);
+    log(
+      'Korinat Info X',
+      `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
+    );
     setCurrentDistance(
       await getDistance(geoPositioningInfo.la, geoPositioningInfo.lo),
     );
@@ -125,7 +128,7 @@ const HomeScreen = ({navigation}) => {
 
       log('Absensi Data Before Distance', data);
       // perbarui informasi jarak ke lokasi
-     await GeocationsInfo();
+      await GeocationsInfo();
       const jarakDenganTitikAbsensi = currentDistance;
       data.distance = jarakDenganTitikAbsensi;
       log('Jarak dengan Titik Absensi', jarakDenganTitikAbsensi);
@@ -226,40 +229,39 @@ const HomeScreen = ({navigation}) => {
       );
     }
   };
-const InfoLokasi=()=>{
-
-  if (currentDistance > 0) {
-    if (currentDistance > stateRangeAttendance) {
-      return (
-        <View>
-          <Text style={styles.infoText}>
-            Kamu berada {currentDistance}m dari Lokasi pengambilan
-            Absen seharusnya. cobalah bergerak
-            {currentDistance - stateRangeAttendance}m lagi hingga
-            jarak kamu sudah tidak lebih dari {stateRangeAttendance}
-          </Text>
-        </View>
-      );
+  const InfoLokasi = () => {
+    if (currentDistance > 0) {
+      if (currentDistance > stateRangeAttendance) {
+        return (
+          <View>
+            <Text style={styles.infoText}>
+              Kamu berada {currentDistance}m dari Lokasi pengambilan Absen
+              seharusnya. cobalah bergerak
+              {currentDistance - stateRangeAttendance}m lagi hingga jarak kamu
+              sudah tidak lebih dari {stateRangeAttendance}
+            </Text>
+          </View>
+        );
+      } else {
+        return (
+          <View>
+            <Text style={styles.infoText}>
+              Kamu berada sudah berada diposisi {currentDistance}m dari Lokasi
+              pengambilan Absen seharusnya.
+            </Text>
+          </View>
+        );
+      }
     } else {
       return (
         <View>
           <Text style={styles.infoText}>
-            Kamu berada sudah berada diposisi {currentDistance}m dari
-            Lokasi pengambilan Absen seharusnya.
+            Belum ada Info lokasi, coba ambil absen dulu nanti kami infokan
           </Text>
         </View>
       );
     }
-  }else{
-    return(
-      <View>
-        <Text style={styles.infoText}>
-        Belum ada Info lokasi, coba ambil absen dulu nanti kami infokan 
-        </Text>
-      </View>
-    )
-  }
-}
+  };
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -329,7 +331,7 @@ const InfoLokasi=()=>{
         </View>
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>Informasi Lokasi</Text>
-          <InfoLokasi/>
+          <InfoLokasi />
           {/* <TouchableOpacity
             style={styles.HistoryButton}
             onPress={() => navigation.navigate('HistoryLokasi')}>
