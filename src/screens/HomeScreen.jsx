@@ -224,63 +224,72 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require('../image/smk.png')} style={styles.logo} />
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerTitle}>Absensi Apel SMKN 1</Text>
-            <Text style={styles.headerSubtitle}>
-              Menggunakan Lokasi Handphone Anda
-            </Text>
+            <Text style={styles.headerSubtitle}>SINTUK TOBOH GADANG</Text>
           </View>
         </View>
         <View style={styles.profile}>
           <Image source={profileImage} style={styles.profilePic} />
           <View>
-            <Text style={styles.profileName}>{userStudentData.nama}</Text>
-            <Text style={styles.profileNumber}>{userData.username}</Text>
+            <Text style={styles.profileName}>
+              {userStudentData ? userStudentData.nama : userData.username}
+            </Text>
+            <Text style={styles.profileNumber}>{userData.noWa}</Text>
           </View>
         </View>
+        <TouchableOpacity
+          style={styles.notificationButton}
+          onPress={() => navigation.navigate('Notification')}>
+          <Icon name="notifications-outline" size={30} color="#fff" />
+        </TouchableOpacity>
       </View>
 
-      {/* Main Content */}
-      <View style={styles.main}>
+      {/* Buttons */}
+      <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          style={styles.card}
+          style={styles.button}
           onPress={() => handleAbsensi('in')}>
-          <Icon name="log-in" size={60} color="green" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardText}>Check In</Text>
-          </View>
+          <Icon name="log-in-outline" size={40} color="#4CAF50" />
+          <Text style={styles.buttonText}>Masuk</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.card}
+          style={styles.button}
           onPress={() => handleAbsensi('out')}>
-          <Icon name="log-out" size={60} color="red" />
-          <View style={styles.cardContent}>
-            <Text style={styles.cardText}>Check Out</Text>
-          </View>
+          <Icon name="log-out-outline" size={40} color="#E91E63" />
+          <Text style={styles.buttonText}>Pulang</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Last CheckIn and CheckOut */}
-      <View style={styles.lastCheck}>
-        <View style={styles.lastCheckCard}>
-          <Icon name="time" size={60} color="black" />
-          <View style={styles.lastCheckCardContent}>
-            <Text style={styles.lastCheckText}>
-              {lastCheckIn
-                ? IndonesiaTimeConverter(lastCheckIn.created_at)
-                : 'Tidak ada Check In'}
-            </Text>
-            <Text style={styles.lastCheckLabel}>Last Check In</Text>
-          </View>
+      {/* Information */}
+      <View style={styles.infoContainer}>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
+          <Text style={styles.infoText}>
+            {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
+          </Text>
+          <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryMasuk')}>
+            <Icon name="timer-outline" size={30} color="#998988" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.lastCheckCard}>
-          <Icon name="time" size={60} color="black" />
-          <View style={styles.lastCheckCardContent}>
-            <Text style={styles.lastCheckText}>
-              {lastCheckOut
-                ? IndonesiaTimeConverter(lastCheckOut.created_at)
-                : 'Tidak ada Check Out'}
-            </Text>
-            <Text style={styles.lastCheckLabel}>Last Check Out</Text>
-          </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
+          <Text style={styles.infoText}>
+            {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
+          </Text>
+          <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryKeluar')}>
+            <Icon name="timer-outline" size={30} color="#998988" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Map */}
+      <View style={styles.mapContainer}>
+        <Text style={styles.mapTitle}>Lokasi Saat ini</Text>
+        <View style={styles.mapPlaceholder}>
+          <Text>Map Placeholder</Text>
         </View>
       </View>
     </View>
