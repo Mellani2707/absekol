@@ -124,7 +124,7 @@ const HomeScreen = ({navigation}) => {
 
       log('Absensi Data Before Distance', data);
       // perbarui informasi jarak ke lokasi
-      GeocationsInfo();
+     await GeocationsInfo();
       const jarakDenganTitikAbsensi = currentDistance;
       data.distance = jarakDenganTitikAbsensi;
       log('Jarak dengan Titik Absensi', jarakDenganTitikAbsensi);
