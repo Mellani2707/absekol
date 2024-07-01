@@ -92,9 +92,9 @@ const HomeScreen = ({navigation}) => {
       setLastCheckIn(result.checkInTop);
       setLastCheckOut(result.checkOutTop);
       await requestACCESS_FINE_LOCATIONPermission();
-      if (geoPositioningInfo.la) {
-        await GeocationsInfo();
-      }
+      // if (geoPositioningInfo.la) {
+      //   await GeocationsInfo();
+      // }
     } catch (error) {
       log('Fetch Info Error', error);
     } finally {
@@ -225,7 +225,40 @@ const HomeScreen = ({navigation}) => {
       );
     }
   };
+const InfoLokasi=()=>{
 
+  if (currentDistance > 0) {
+    if (currentDistance > stateRangeAttendance) {
+      return (
+        <View>
+          <Text style={styles.infoText}>
+            Kamu berada {currentDistance}m dari Lokasi pengambilan
+            Absen seharusnya. cobalah bergerak
+            {currentDistance - stateRangeAttendance}m lagi hingga
+            jarak kamu sudah tidak lebih dari {stateRangeAttendance}
+          </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Text style={styles.infoText}>
+            Kamu berada sudah berada diposisi {currentDistance}m dari
+            Lokasi pengambilan Absen seharusnya.
+          </Text>
+        </View>
+      );
+    }
+  }else{
+    return(
+      <View>
+        <Text style={styles.infoText}>
+        Belum ada Info lokasi, coba ambil absen dulu nanti kami infokan 
+        </Text>
+      </View>
+    )
+  }
+}
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -295,31 +328,7 @@ const HomeScreen = ({navigation}) => {
         </View>
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>Informasi Lokasi</Text>
-          {() => {
-            if (currentDistance > 0) {
-              if (currentDistance > stateRangeAttendance) {
-                return (
-                  <View>
-                    <Text style={styles.infoText}>
-                      Kamu berada {currentDistance}m dari Lokasi pengambilan
-                      Absen seharusnya. cobalah bergerak
-                      {currentDistance - stateRangeAttendance}m lagi hingga
-                      jarak kamu sudah tidak lebih dari {stateRangeAttendance}
-                    </Text>
-                  </View>
-                );
-              } else {
-                return (
-                  <View>
-                    <Text style={styles.infoText}>
-                      Kamu berada sudah berada diposisi {currentDistance}m dari
-                      Lokasi pengambilan Absen seharusnya.
-                    </Text>
-                  </View>
-                );
-              }
-            }
-          }}
+          <InfoLokasi/>
           {/* <TouchableOpacity
             style={styles.HistoryButton}
             onPress={() => navigation.navigate('HistoryLokasi')}>
