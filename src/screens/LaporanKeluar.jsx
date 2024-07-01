@@ -53,20 +53,31 @@ const LaporanKeluar = ({navigation}) => {
 
   const renderItem = ({item}) => (
     <View style={styles.absensiItem}>
-      <Icon name="calendar-outline" size={24} color="#6A1B9A" />
+      <Icon name="user-outline" size={24} color="#6A1B9A" />
       <View style={styles.absensiDetails}>
         <Text style={styles.absensiDate}>
-          Check-Out: {IndonesiaTimeConverter(item.checkOut)}
+          {item.Student ? item.Student.nama : '?no user?'}
         </Text>
-        <View style={styles.absensiStatus}>
+        <View style={styles.absensiSubItem}>
+          <Text style={styles.absensiText}>
+            NISN : {item.Student ? item.Student.nisn : '?'}
+          </Text>
+        </View>
+        <View style={styles.absensiSubItem}>
+          <Icon name="calendar-outline" size={20} color="#333" />
+          <Text style={styles.absensiText}>
+            Berhasil melakukan Check-Out pada: {IndonesiaTimeConverter(item.checkOut)}
+          </Text>
+        </View>
+        <View style={styles.absensiSubItem}>
           <Icon name="checkmark-done-outline" size={20} color="#333" />
-          <Text style={styles.absensiStatusText}>
+          <Text style={styles.absensiText}>
             Fake GPS: {item.isFakeGps ? 'Yes' : 'No'}
           </Text>
         </View>
-        <View style={styles.absensiStatus}>
+        <View style={styles.absensiSubItem}>
           <Icon name="navigate-outline" size={20} color="#333" />
-          <Text style={styles.absensiStatusText}>
+          <Text style={styles.absensiText}>
             Distance: {item.distance + ' m'}
           </Text>
         </View>
@@ -160,12 +171,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  absensiStatus: {
+  absensiSubItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
   },
-  absensiStatusText: {
+  absensiText: {
     fontSize: 14,
     color: '#666',
     marginHorizontal: 5,

@@ -58,24 +58,24 @@ const LaporanMasuk = ({navigation}) => {
         <Text style={styles.absensiDate}>
           {item.Student?item.Student.nama:'?no user?'}
         </Text>
-        <View style={styles.absensiItem}>
+        <View style={styles.absensiSubItem}>
           <Text style={styles.absensiText}>
             NISN : {item.Student?item.Student.nisn:'?'}
           </Text>
         </View>
-        <View style={styles.absensiItem}>
+        <View style={styles.absensiSubItem}>
           <Icon name="calendar-outline" size={20} color="#333" />
           <Text style={styles.absensiText}>
-            Check-In berhasil: {IndonesiaTimeConverter(item.checkIn)}
+            Berhasil melakukan Check-In  pada: {IndonesiaTimeConverter(item.checkIn)}
           </Text>
         </View>
-        <View style={styles.absensiItem}>
+        <View style={styles.absensiSubItem}>
           <Icon name="checkmark-done-outline" size={20} color="#333" />
           <Text style={styles.absensiText}>
             Fake GPS: {item.isFakeGps ? 'Yes' : 'No'}
           </Text>
         </View>
-        <View style={styles.absensiItem}>
+        <View style={styles.absensiSubItem}>
           <Icon name="navigate-outline" size={20} color="#333" />
           <Text style={styles.absensiText}>
             Distance: {item.distance + ' m'}
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   absensiList: {
     paddingBottom: 20,
   },
-  absensiItem: {
+  absensiSubItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 15,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  absensiItem: {
+  absensiSubItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 5,
