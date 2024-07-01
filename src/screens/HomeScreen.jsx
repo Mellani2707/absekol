@@ -103,6 +103,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const GeocationsInfo = async () => {
+    log('jarak saat ini', `Kordinat paramter la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`);
     setCurrentDistance(
       await getDistance(geoPositioningInfo.la, geoPositioningInfo.lo),
     );

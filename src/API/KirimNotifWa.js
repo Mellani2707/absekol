@@ -8,6 +8,7 @@ import log from '../utils/Logger'; // Import utilitas logging
 
 export const KirimNotifWa = async(param) => {
   try {
+    log("Kirim Notif wa ",param );
     const myHeaders = new Headers();
     myHeaders.append(
       'Authorization',
