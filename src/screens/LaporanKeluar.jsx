@@ -53,7 +53,7 @@ const LaporanKeluar = ({navigation}) => {
 
   const renderItem = ({item}) => (
     <View style={styles.absensiItem}>
-      <Icon name="user-outline" size={24} color="#6A1B9A" />
+      <Icon name="accessibility-outline" size={24} color="#6A1B9A" />
       <View style={styles.absensiDetails}>
         <Text style={styles.absensiDate}>
           {item.Student ? item.Student.nama : '?no user?'}
@@ -66,7 +66,8 @@ const LaporanKeluar = ({navigation}) => {
         <View style={styles.absensiSubItem}>
           <Icon name="calendar-outline" size={20} color="#333" />
           <Text style={styles.absensiText}>
-            Berhasil melakukan Check-Out pada: {IndonesiaTimeConverter(item.checkOut)}
+            Berhasil melakukan Check-Out pada:{' '}
+            {IndonesiaTimeConverter(item.checkOut)}
           </Text>
         </View>
         <View style={styles.absensiSubItem}>

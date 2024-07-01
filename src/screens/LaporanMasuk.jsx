@@ -53,20 +53,21 @@ const LaporanMasuk = ({navigation}) => {
 
   const renderItem = ({item}) => (
     <View style={styles.absensiItem}>
-      <Icon name="user-outline" size={24} color="#6A1B9A" />
+      <Icon name="accessibility-outline" size={24} color="#6A1B9A" />
       <View style={styles.absensiDetails}>
         <Text style={styles.absensiDate}>
-          {item.Student?item.Student.nama:'?no user?'}
+          {item.Student ? item.Student.nama : '?no user?'}
         </Text>
         <View style={styles.absensiSubItem}>
           <Text style={styles.absensiText}>
-            NISN : {item.Student?item.Student.nisn:'?'}
+            NISN : {item.Student ? item.Student.nisn : '?'}
           </Text>
         </View>
         <View style={styles.absensiSubItem}>
           <Icon name="calendar-outline" size={20} color="#333" />
           <Text style={styles.absensiText}>
-            Berhasil melakukan Check-In  pada: {IndonesiaTimeConverter(item.checkIn)}
+            Berhasil melakukan Check-In pada:{' '}
+            {IndonesiaTimeConverter(item.checkIn)}
           </Text>
         </View>
         <View style={styles.absensiSubItem}>

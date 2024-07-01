@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,25 +9,23 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { FetchData } from '../API/FetchData';
-import { HitsData } from '../API/HitsData';
-import { KirimNotifWa } from '../API/KirimNotifWa';
-import { getConfigValue } from '../API/GetConfig';
-import { StoreNotifications } from '../API/StoreNotifications';
-import { getDistance } from '../Geolocations/getDistance';
+import {useSelector} from 'react-redux';
+import {FetchData} from '../API/FetchData';
+import {HitsData} from '../API/HitsData';
+import {KirimNotifWa} from '../API/KirimNotifWa';
+import {getConfigValue} from '../API/GetConfig';
+import {StoreNotifications} from '../API/StoreNotifications';
+import {getDistance} from '../Geolocations/getDistance';
 import log from '../utils/Logger'; // Import utilitas logging
 
-import {
-  IndonesiaTimeConverter,
-} from '../TimeZone/IndonesiaTimeConverter';
+import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 import moment from 'moment-timezone';
 import Geolocation from 'react-native-geolocation-service';
 
 const maleImage = require('../image/L.png');
 const femaleImage = require('../image/P.png');
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const user = useSelector(state => state.user);
   const userData = user.user;
   const userStudentData = user.user.Student;
@@ -40,6 +38,7 @@ const HomeScreen = ({ navigation }) => {
   const [geoPositioningInfo, setGeoPositioningInfo] = useState({});
   const [stateRangeAttendance, setStateRangeAttendance] = useState(50);
   const [loading, setLoading] = useState(false);
+  const [currentDistance, setCurrentDistance] = useState(0);
 
   useEffect(() => {
     fetchInfoAbsen(userStudentData.nisn);
@@ -71,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
           error => {
             log('Geo Position Error', `${error.code}, ${error.message}`);
           },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
       } else {
         log(
@@ -92,7 +91,10 @@ const HomeScreen = ({ navigation }) => {
       );
       setLastCheckIn(result.checkInTop);
       setLastCheckOut(result.checkOutTop);
-      requestACCESS_FINE_LOCATIONPermission();
+      await requestACCESS_FINE_LOCATIONPermission();
+      if (geoPositioningInfo.la) {
+        await GeocationsInfo();
+      }
     } catch (error) {
       log('Fetch Info Error', error);
     } finally {
@@ -100,26 +102,32 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const GeocationsInfo = async () => {
+    setCurrentDistance(
+      await getDistance(geoPositioningInfo.la, geoPositioningInfo.lo),
+    );
+    log('jarak saat ini', currentDistance);
+    setStateRangeAttendance(await getConfigValue('ketetapan_jarak_absensi'));
+    log('ketetapan jarak', stateRangeAttendance);
+  };
   const handleAbsensi = async type => {
     try {
       const currentDate = moment().tz('Asia/Jakarta').format();
       let data = {
         nisn: userStudentData.nisn,
         latitude: geoPositioningInfo ? geoPositioningInfo.la : '-0.9999999999',
-        longtitude: geoPositioningInfo ? geoPositioningInfo.lo : '100.999999999',
+        longtitude: geoPositioningInfo
+          ? geoPositioningInfo.lo
+          : '100.999999999',
         isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
       };
 
       log('Absensi Data Before Distance', data);
-      const jarakDenganTitikAbsensi = await getDistance(
-        geoPositioningInfo.la,
-        geoPositioningInfo.lo,
-      );
+      // perbarui informasi jarak ke lokasi
+      GeocationsInfo();
+      const jarakDenganTitikAbsensi = currentDistance;
       data.distance = jarakDenganTitikAbsensi;
       log('Jarak dengan Titik Absensi', jarakDenganTitikAbsensi);
-
-      const configValue = await getConfigValue('ketetapan_jarak_absensi');
-      setStateRangeAttendance(configValue);
       log('Jarak Maksimal', stateRangeAttendance);
 
       let dataNotifikasi = {
@@ -143,8 +151,9 @@ const HomeScreen = ({ navigation }) => {
           );
           fetchInfoAbsen(userStudentData.nisn);
 
-          dataNotifikasi.message = `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'
-            } berhasil`;
+          dataNotifikasi.message = `Absensi ${
+            type === 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
           dataNotifikasi.receiver = userData.noWa;
           dataNotifikasi.attendanceId = result.id;
           dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
@@ -164,8 +173,9 @@ const HomeScreen = ({ navigation }) => {
             currentRange: jarakDenganTitikAbsensi,
           });
 
-          dataNotifikasi.message = `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'
-            } berhasil`;
+          dataNotifikasi.message = `Absensi ${
+            type === 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
           dataNotifikasi.receiver = userStudentData.hpOrtu;
           dataNotifikasi.status =
             'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
@@ -283,15 +293,51 @@ const HomeScreen = ({ navigation }) => {
             <Icon name="timer-outline" size={30} color="#998988" />
           </TouchableOpacity>
         </View>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Informasi Lokasi</Text>
+          {() => {
+            if (currentDistance > 0) {
+              if (currentDistance > stateRangeAttendance) {
+                return (
+                  <View>
+                    <Text style={styles.infoText}>
+                      Kamu berada {currentDistance}m dari Lokasi pengambilan
+                      Absen seharusnya. cobalah bergerak
+                      {currentDistance - stateRangeAttendance}m lagi hingga
+                      jarak kamu sudah tidak lebih dari {stateRangeAttendance}
+                    </Text>
+                  </View>
+                );
+              } else {
+                return (
+                  <View>
+                    <Text style={styles.infoText}>
+                      Kamu berada sudah berada diposisi {currentDistance}m dari
+                      Lokasi pengambilan Absen seharusnya.
+                    </Text>
+                  </View>
+                );
+              }
+            }
+          }}
+          {/* <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryLokasi')}>
+            <Icon name="navigate-circle-outline" size={30} color="#998988" />
+          </TouchableOpacity> */}
+        </View>
       </View>
 
-      {/* Map */}
-      <View style={styles.mapContainer}>
+      {/* Map
+       */}
+      {/*
+       <View style={styles.mapContainer}>
         <Text style={styles.mapTitle}>Lokasi Saat ini</Text>
         <View style={styles.mapPlaceholder}>
           <Text>Map Placeholder</Text>
         </View>
       </View>
+      */}
     </View>
   );
 };
@@ -338,7 +384,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -400,7 +446,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -432,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,

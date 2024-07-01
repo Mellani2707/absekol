@@ -1,4 +1,5 @@
 import {getDistance as geolibGetDistance} from 'geolib';
+import log from '../utils/Logger'; // Import utilitas logging
 
 /**
  * Mengambil latitude dan longitude target dari API.
@@ -59,8 +60,9 @@ export const getDistance = async (currentLa, currentLo) => {
       },
     );
   } catch (error) {
-    console.log('==============Error happening details======================');
-    console.log(error);
-    console.log('====================================');
+    log(
+      `Error happening details on getDistance with data ${currentLa}, ${currentLo} `,
+      error,
+    );
   }
 };
