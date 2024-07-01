@@ -66,12 +66,21 @@ const HomeScreen = ({navigation}) => {
               la: position.coords.latitude,
               lo: position.coords.longitude,
             });
+            log(
+              'Korinat Info after Geolocation get',
+              `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
+            );
+            setCurrentDistance(
+               getDistance(geoPositioningInfo.la, geoPositioningInfo.lo),
+            );
           },
+          
           error => {
             log('Geo Position Error', `${error.code}, ${error.message}`);
           },
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
+        
       } else {
         log(
           'GPS Permission Denied',
