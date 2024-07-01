@@ -140,7 +140,7 @@ const HomeScreen = ({navigation}) => {
       await GeocationsInfo();
       const jarakDenganTitikAbsensi = currentDistance;
       data.distance = jarakDenganTitikAbsensi;
-      log('Jarak dengan Titik Absensi', jarakDenganTitikAbsensi);
+      log('Jarak dengan Titik Absensi sebelum dibandingkan', jarakDenganTitikAbsensi);
       log('Jarak Maksimal', stateRangeAttendance);
 
       let dataNotifikasi = {
