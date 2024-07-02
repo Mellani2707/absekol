@@ -60,19 +60,19 @@ const HomeScreen = ({navigation}) => {
         log('GPS Permission', 'Aplikasi Dapat mengakses lokasimu');
         Geolocation.getCurrentPosition(
           position => {
+            const { latitude, longitude, mocked } = position.coords;
             log('Geo Position', position);
             setGeoPositioningInfo({
-              isMocked: position.mocked,
-              la: position.coords.latitude,
-              lo: position.coords.longitude,
+              isMocked: mocked,
+              la: latitude,
+              lo: longitude,
             });
             log(
-              'Korinat Info after Geolocation get',
+              'Kordinat Info after Geolocation get',
               `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
             );
-            setCurrentDistance(
-               getDistance(geoPositioningInfo.la, geoPositioningInfo.lo),
-            );
+            const distance = getDistance(latitude, longitude);
+            setCurrentDistance(distance);
           },
           
           error => {
@@ -101,9 +101,6 @@ const HomeScreen = ({navigation}) => {
       setLastCheckIn(result.checkInTop);
       setLastCheckOut(result.checkOutTop);
       await requestACCESS_FINE_LOCATIONPermission();
-      if (geoPositioningInfo.la) {
-        await GeocationsInfo();
-      }
     } catch (error) {
       log('Fetch Info Error', error);
     } finally {
@@ -113,7 +110,7 @@ const HomeScreen = ({navigation}) => {
 
   const GeocationsInfo = async () => {
     log(
-      'Korinat Info X',
+      'Check kembali posisi kordinat kamu',
       `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
     );
     setCurrentDistance(
