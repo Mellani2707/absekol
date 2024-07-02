@@ -23,6 +23,7 @@ class HomeScreenGuru extends Component {
       jumlahMasuk: 0,
       jumlahPulang: 0,
       jumlahFake: 0,
+      jumlahTidakMasuk: 0,
       loadingStatement: 'loading',
     };
   }
@@ -40,10 +41,13 @@ class HomeScreenGuru extends Component {
       const result = await FetchData(
         `https://absekol-api.numpang.my.id/api/attendances/report`,
       );
-      this.setState({jumlahMasuk: result.totalCheckIn});
-      this.setState({jumlahPulang: result.totalCheckOut});
-      this.setState({jumlahMasuk: result.totalFakeGPS});
-      this.setState({jumlahSiswa: result.totalStudents});
+      await this.setState({jumlahMasuk: result.totalCheckIn});
+      await this.setState({jumlahPulang: result.totalCheckOut});
+      await this.setState({jumlahFake: result.totalFakeGPS});
+      await this.setState({jumlahSiswa: result.totalStudents});
+      await this.setState({
+        jumlahTidakMasuk: result.totalStudents - result.totalCheckIn,
+      });
       log('Loaded result', result);
     } catch (error) {
       console.error(error);
@@ -61,7 +65,7 @@ class HomeScreenGuru extends Component {
     log('Loading redux', this.state.loadingStatement);
     //ambil data user dari redux
     // const user = await useSelector(state => state.user);
-    this.setState({
+    await this.setState({
       userData: this.props.user,
       profileImage: userImage,
     });
@@ -136,17 +140,21 @@ class HomeScreenGuru extends Component {
         <View style={styles.infoContainer}>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Jumlah Siswa </Text>
-            <Text style={styles.infoText}>{this.state.jumlahMasuk}</Text>
+            <Text style={styles.infoText}>{this.state.jumlahSiswa}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Jumlah Siswa Masuk Hari Ini</Text>
             <Text style={styles.infoText}>{this.state.jumlahMasuk}</Text>
           </View>
           <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Jumlah Siswa Pulang Hari Ini</Text>
+            <Text style={styles.infoText}>{this.state.jumlahPulang}</Text>
+          </View>
+          <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>
               Jumlah Siswa Tidak Masuk Hari Ini
             </Text>
-            <Text style={styles.infoText}>-</Text>
+            <Text style={styles.infoText}>{this.state.jumlahTidakMasuk}</Text>
           </View>
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>
