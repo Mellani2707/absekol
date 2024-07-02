@@ -31,6 +31,14 @@ export default class HomeScreen extends Component {
     };
   }
   render() {
+    if (true) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4CAF50" />
+          <Text>Home Siswa Under Mintanance...</Text>
+        </View>
+      );
+    }
     return (
       <View>
         <Text> textInComponent </Text>
@@ -38,3 +46,153 @@ export default class HomeScreen extends Component {
     )
   }
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F4F4F4',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F4F4',
+  },
+  header: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    elevation: 5,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
+  },
+  headerTextContainer: {
+    marginLeft: 10,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#fff',
+  },
+  profile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  profilePic: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 15,
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  profileNumber: {
+    fontSize: 16,
+    color: '#666',
+  },
+  notificationButton: {
+    position: 'absolute',
+    top: 20,
+    right: 15,
+  },
+  HistoryButton: {
+    position: 'absolute',
+    top: 20,
+    right: 15,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    width: '45%',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    elevation: 3,
+  },
+  buttonText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: '#000',
+    textAlign: 'center',
+  },
+  infoContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  infoBox: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  infoTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  infoText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
+  },
+  mapContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  mapTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  mapPlaceholder: {
+    height: 200,
+    backgroundColor: '#eee',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+});
