@@ -83,7 +83,7 @@ export const KirimNotifWa = async(param) => {
 
 
   } catch (error) {
-    log('KirimNotifWa Errror', error);
+    log(`KirimNotifWa untuk ${param.status} Errror karena `, error);
    
     Alert.alert(
       'Error',
