@@ -10,7 +10,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { FetchData } from '../API/FetchData';
 import { HitsData } from '../API/HitsData';
 import { KirimNotifWa } from '../API/KirimNotifWa';
@@ -25,7 +25,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 const maleImage = require('../image/L.png');
 const femaleImage = require('../image/P.png');
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -103,30 +103,63 @@ export default class HomeScreen extends Component {
     }
   };
    GeolocationsInfo = async () => {
-     while (currentDistance > stateRangeAttendance & currentDistance < 1){
-       this.requestACCESS_FINE_LOCATIONPermission()
+     while (this.state.currentDistance > this.state.stateRangeAttendance & this.state.currentDistance < 1){
+      await this.requestACCESS_FINE_LOCATIONPermission()
+
        const ketetapan = await getConfigValue('ketetapan_jarak_absensi')
-       this.setState({stateRangeAttendance:ketetapan})
+       await this.setState({stateRangeAttendance:ketetapan})
+
+
+       await this.setState({
+         loadingStatement: `jarak kamu kelokasi absen baru ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan maksimal ${this.state.currentDistance}m. Kami mencoba memuat data GPS kembali  . . .`,
+       });
+       await this.setState({ loading: false });
+       log('reloading GPS . .', this.state.loadingStatement);
      }
+     await this.setState({
+       loadingStatement: 'load data GPS sudah selesai hingga akurat. .',
+     });
+     await this.setState({ loading: false });
+     log('Loading GPS Success', this.state.loadingStatement);
+  };
+  fetchUserData = async () => {
+    await this.setState({
+      loadingStatement: 'load data user from redux useSelector. .',
+    });
+    await this.setState({ loading: true });
+    log('Loading redux', this.state.loadingStatement);
+    //ambil data user dari redux
+    // const user = await useSelector(state => state.user);
+    await this.setState({
+      userData: this.props.user.user,
+      profileImage: userImage,
+    });
+
+    log('User Data -->', this.state.userData);
+    this.setState({ loading: false });
+    log('Loading', 'load data user completed');
   };
   render() {
-    if (true) {
+    if (this.state.loading) {
       return (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text>Home Siswa Under Mintanance...</Text>
+          <Text>{this.state.loadingStatement}</Text>
         </View>
       );
     }
     return (
       <View>
-        <Text> textInComponent </Text>
+        <Text> Berhasil mendapatkan jarak absensi yang sesuai {this.state.currentDistance}</Text>
       </View>
     )
   }
 }
 
-
+const mapStateToProps = state => ({
+  user: state.user,
+});
+export default connect(mapStateToProps)(HomeScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

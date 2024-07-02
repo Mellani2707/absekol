@@ -24,7 +24,7 @@ class HomeScreenGuru extends Component {
       jumlahPulang: 0,
       jumlahFake: 0,
       jumlahTidakMasuk: 0,
-      loadingStatement: 'loading',
+      loadingStatement: 'loading . .',
     };
   }
   componentDidMount() {
@@ -83,7 +83,7 @@ class HomeScreenGuru extends Component {
       return (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text>Loading...</Text>
+          <Text>{this.state.loadingStatement}</Text>
         </View>
       );
     }
