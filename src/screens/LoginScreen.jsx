@@ -86,12 +86,16 @@ const LoginScreen = ({navigation}) => {
               userdata.Role.roleName == 'Siswa' ||
               userdata.Role.roleName == 'siswa'
             ) {
+              Alert.alert(
+                'Success',
+                `User logged in successfully as ${userdata.Role.roleName}`,
+              );
               navigation.navigate('Home'); // Navigasi ke halaman
             } else if (
               userdata.Role.roleName == 'Admin' ||
               userdata.Role.roleName == 'admin'
             ) {
-              navigation.navigate('Home'); // Navigasi ke halaman
+              navigation.navigate('HomeAdmin'); // Navigasi ke halaman
             } else {
               navigation.navigate('HomeEmpty'); // Navigasi ke halaman
             }
