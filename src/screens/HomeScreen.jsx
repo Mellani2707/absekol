@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
@@ -38,6 +39,11 @@ export default class HomeScreen extends Component {
   componentDidMount() {
   }
    requestACCESS_FINE_LOCATIONPermission = async () => {
+     this.setState({ loadingStatement: "Mencoba mengakses GPS mu dengan Akurat . ." })
+     this.setState({ loading: true })
+     log("Loading", this.state.loadingStatement)
+
+
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -53,6 +59,8 @@ export default class HomeScreen extends Component {
         log('GPS Permission', 'Aplikasi Dapat mengakses lokasimu');
         log('GPS Load . . .', 'Mencoba mengakses');
         this.setState({ loadingStatement:"Mencoba mengakses GPS mu dengan Akurat . ."})
+        log("GPS Load", this.state.loadingStatement)
+
         Geolocation.getCurrentPosition(
           position => {
             const { latitude, longitude, mocked } = position.coords;
@@ -64,11 +72,11 @@ export default class HomeScreen extends Component {
                 lo: longitude,
               }
             })
+            
+            this.setState({
+              loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}` });
             log(
-              'Kordinat kamu berhasil didapatkan',
-              `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
-            );
-            this.setState({ loadingStatement: "Kordinat kamu berhasil didapatkan" })
+              'Kordinat kamu berhasil didapatkan', this.state.loadingStatement );
 
             const distance = getDistance(latitude, longitude);
             this.setState({

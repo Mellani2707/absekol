@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 const userImage = require('../image/akun.jpg');
 import log from '../utils/Logger'; // Import utilitas logging
@@ -24,7 +24,6 @@ export default class HomeScreenGuru extends Component {
   }
    fetchAbsensiReport = async () => {
      log("Loading", "load data report")
-
     this.setState({loading:true})
     try {
       const result = await FetchData(
