@@ -1,63 +1,77 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 const userImage = require('../image/akun.jpg');
 import log from '../utils/Logger'; // Import utilitas logging
-import { HitsData } from '../API/HitsData';
-import { FetchData } from '../API/FetchData';
-import { useSelector } from 'react-redux';
+import {HitsData} from '../API/HitsData';
+import {FetchData} from '../API/FetchData';
+import {connect} from 'react-redux';
 export default class HomeScreenGuru extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       userData: null,
-      jumlahSiswa:0,
-      jumlahMasuk:0,
-      jumlahPulang:0,
-      jumlahFake:0,
+      jumlahSiswa: 0,
+      jumlahMasuk: 0,
+      jumlahPulang: 0,
+      jumlahFake: 0,
+      loadingStatement: 'loading',
     };
   }
   componentDidMount() {
     this.fetchUserData();
-    this.fetchAbsensiReport();
+    // this.fetchAbsensiReport();
   }
-   fetchAbsensiReport = async () => {
-     log("Loading", "load data report")
-    this.setState({loading:true})
+  fetchAbsensiReport = async () => {
+    this.setState({
+      loadingStatement: 'load data report . .',
+    });
+    this.setState({loading: true});
+    log('Loading', this.state.loadingStatement);
     try {
       const result = await FetchData(
         `https://absekol-api.numpang.my.id/api/attendances/report`,
       );
-      this.setState({ jumlahMasuk: result.totalCheckIn })
-      this.setState({ jumlahPulang: result.totalCheckOut })
-      this.setState({ jumlahMasuk: result.totalFakeGPS })
-      this.setState({ jumlahSiswa: result.totalStudents })
-      log("Loaded result", result)
-
+      this.setState({jumlahMasuk: result.totalCheckIn});
+      this.setState({jumlahPulang: result.totalCheckOut});
+      this.setState({jumlahMasuk: result.totalFakeGPS});
+      this.setState({jumlahSiswa: result.totalStudents});
+      log('Loaded result', result);
     } catch (error) {
       console.error(error);
-      log("Loading report Erorr",error )
-
+      log('Loading report Erorr', error);
     } finally {
-      this.setState({ loading: false })
-      log("Loading", "load data report completed")
-
+      this.setState({loading: false});
+      log('Loading', 'load data report completed');
     }
   };
   fetchUserData = async () => {
+    await this.setState({
+      loadingStatement: 'load data user from redux useSelector. .',
+    });
+    await this.setState({loading: true});
+    log('Loading redux', this.state.loadingStatement);
     //ambil data user dari redux
-    const user = useSelector(state => state.user);
+    // const user = await useSelector(state => state.user);
     this.setState({
-      userData:user,
-      profileImage: userImage
-    })
-    log("User Data",this.state.userData)
-  }
-  
+      userData: this.props.user,
+      profileImage: userImage,
+    });
+
+    log('User Data -->', this.state.userData);
+  };
+
   render() {
-    const { navigation } = this.props;
-    const { loading, userData } = this.state;
+    const {navigation} = this.props;
+    const {loading, userData} = this.state;
 
     if (loading) {
       return (
@@ -79,13 +93,18 @@ export default class HomeScreenGuru extends Component {
             </View>
           </View>
           <View style={styles.profile}>
-            <Image
-              source={this.state.profileImage}
-              style={styles.profilePic}
-            />
+            <Image source={this.state.profileImage} style={styles.profilePic} />
             <View>
-              <Text style={styles.profileName}>{this.state.userData.Role ?this.state.userData.Role.roleName:'Tidak Ada Role'}</Text>
-              <Text style={styles.profileNumber}>{this.state.userData.noWa ? this.state.userData.noWa : 'Tidak Ada Nomor WA'}</Text>
+              <Text style={styles.profileName}>
+                {this.state.userData.Role
+                  ? this.state.userData.Role.roleName
+                  : 'Tidak Ada Role'}
+              </Text>
+              <Text style={styles.profileNumber}>
+                {this.state.userData.noWa
+                  ? this.state.userData.noWa
+                  : 'Tidak Ada Nomor WA'}
+              </Text>
             </View>
           </View>
           <TouchableOpacity
@@ -141,8 +160,6 @@ export default class HomeScreenGuru extends Component {
   }
 }
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -191,7 +208,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -250,7 +267,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -282,7 +299,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
