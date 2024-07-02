@@ -66,7 +66,7 @@ class HomeScreenGuru extends Component {
     //ambil data user dari redux
     // const user = await useSelector(state => state.user);
     await this.setState({
-      userData: this.props.user,
+      userData: this.props.user.user,
       profileImage: userImage,
     });
 
@@ -102,6 +102,11 @@ class HomeScreenGuru extends Component {
             <Image source={this.state.profileImage} style={styles.profilePic} />
             <View>
               <Text style={styles.profileName}>
+                {' '}
+                {this.state.userData.username
+                  ? this.state.userData.username
+                  : 'undifened  user'}
+                -
                 {this.state.userData.Role
                   ? this.state.userData.Role.roleName
                   : 'Tidak Ada Role'}
