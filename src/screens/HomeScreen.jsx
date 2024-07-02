@@ -374,6 +374,8 @@ class HomeScreen extends Component {
 
     const {profileImage, userStudentData, userData, lastCheckIn, lastCheckOut} =
       this.state;
+    const {navigation} = this.props;
+
     if (this.state.loading) {
       return (
         <View style={styles.loadingContainer}>
