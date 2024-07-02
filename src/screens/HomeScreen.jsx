@@ -102,6 +102,13 @@ export default class HomeScreen extends Component {
       log('Permission Request Error', err);
     }
   };
+   GeolocationsInfo = async () => {
+     while (currentDistance > stateRangeAttendance & currentDistance < 1){
+       this.requestACCESS_FINE_LOCATIONPermission()
+       const ketetapan = await getConfigValue('ketetapan_jarak_absensi')
+       this.setState({stateRangeAttendance:ketetapan})
+     }
+  };
   render() {
     if (true) {
       return (
