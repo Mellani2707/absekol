@@ -4,7 +4,7 @@ const User = require('../models/User');
 const Role = require('../models/Role');
 const GpsLog = require('../models/GpsLog');
 const { Op } = require('sequelize');
-const getAttendanceReport = async () => {
+const getAttendanceReportAll = async () => {
     try {
         const totalCheckIn = await Attendance.count({
             where: {
@@ -27,8 +27,74 @@ const getAttendanceReport = async () => {
                 isFakeGps: true
             }
         });
+        const totalStudents = await Student.count();
+        // Asumsikan siswa yang telah mengambil absen adalah yang memiliki checkIn atau checkOut
+        const totalAttendance = await Attendance.count({
+            where: {
+                [Op.or]: [
+                    { checkIn: { [Op.ne]: null } },
+                    { checkOut: { [Op.ne]: null } }
+                ]
+            }
+        });
 
-        return { totalCheckIn, totalCheckOut, totalFakeGPS };
+        return { totalCheckIn, totalCheckOut, totalFakeGPS, totalAbsent, totalStudents };
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching attendance report: ${error.message}`);
+    }
+};
+const getAttendanceReport = async () => {
+    try {
+        // Mendapatkan tanggal hari ini dan besok
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set awal hari ini (00:00:00)
+
+        const tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0); // Set awal besok (00:00:00)
+
+        const totalCheckIn = await Attendance.count({
+            where: {
+                checkIn: {
+                    [Op.ne]: null,
+                    [Op.between]: [today, tomorrow]
+                }
+            }
+        });
+
+        const totalCheckOut = await Attendance.count({
+            where: {
+                checkOut: {
+                    [Op.ne]: null,
+                    [Op.between]: [today, tomorrow]
+                }
+            }
+        });
+
+        const totalFakeGPS = await Attendance.count({
+            where: {
+                isFakeGps: true,
+                checkIn: {
+                    [Op.between]: [today, tomorrow]
+                }
+            }
+        });
+
+        const totalStudents = await Student.count();
+
+        // Asumsikan siswa yang telah mengambil absen adalah yang memiliki checkIn atau checkOut
+        const totalAttendance = await Attendance.count({
+            where: {
+                [Op.or]: [
+                    { checkIn: { [Op.between]: [today, tomorrow] } },
+                    { checkOut: { [Op.between]: [today, tomorrow] } }
+                ]
+            }
+        });
+
+        const totalAbsent = totalStudents - totalAttendance;
+
+        return { totalCheckIn, totalCheckOut, totalFakeGPS, totalAbsent, totalStudents };
     } catch (error) {
         throw error.errors ? error : new Error(`Error fetching attendance report: ${error.message}`);
     }
