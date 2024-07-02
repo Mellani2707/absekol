@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,10 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 const userImage = require('../image/akun.jpg');
 import log from '../utils/Logger'; // Import utilitas logging
-import { HitsData } from '../API/HitsData';
-import { FetchData } from '../API/FetchData';
-import { connect } from 'react-redux';
- class HomeScreenGuru extends Component {
+import {HitsData} from '../API/HitsData';
+import {FetchData} from '../API/FetchData';
+import {connect} from 'react-redux';
+class HomeScreenGuru extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,28 +28,28 @@ import { connect } from 'react-redux';
   }
   componentDidMount() {
     this.fetchUserData();
-    // this.fetchAbsensiReport();
+    this.fetchAbsensiReport();
   }
   fetchAbsensiReport = async () => {
     this.setState({
       loadingStatement: 'load data report . .',
     });
-    this.setState({ loading: true });
+    this.setState({loading: true});
     log('Loading', this.state.loadingStatement);
     try {
       const result = await FetchData(
         `https://absekol-api.numpang.my.id/api/attendances/report`,
       );
-      this.setState({ jumlahMasuk: result.totalCheckIn });
-      this.setState({ jumlahPulang: result.totalCheckOut });
-      this.setState({ jumlahMasuk: result.totalFakeGPS });
-      this.setState({ jumlahSiswa: result.totalStudents });
+      this.setState({jumlahMasuk: result.totalCheckIn});
+      this.setState({jumlahPulang: result.totalCheckOut});
+      this.setState({jumlahMasuk: result.totalFakeGPS});
+      this.setState({jumlahSiswa: result.totalStudents});
       log('Loaded result', result);
     } catch (error) {
       console.error(error);
       log('Loading report Erorr', error);
     } finally {
-      this.setState({ loading: false });
+      this.setState({loading: false});
       log('Loading', 'load data report completed');
     }
   };
@@ -57,7 +57,7 @@ import { connect } from 'react-redux';
     await this.setState({
       loadingStatement: 'load data user from redux useSelector. .',
     });
-    await this.setState({ loading: true });
+    await this.setState({loading: true});
     log('Loading redux', this.state.loadingStatement);
     //ambil data user dari redux
     // const user = await useSelector(state => state.user);
@@ -67,11 +67,13 @@ import { connect } from 'react-redux';
     });
 
     log('User Data -->', this.state.userData);
+    this.setState({loading: false});
+    log('Loading', 'load data user completed');
   };
 
   render() {
-    const { navigation } = this.props;
-    const { loading, userData } = this.state;
+    const {navigation} = this.props;
+    const {loading, userData} = this.state;
 
     if (loading) {
       return (
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -270,7 +272,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -302,7 +304,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
