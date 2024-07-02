@@ -28,8 +28,71 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
+      loadingStatement:"Loading . . .",
+      userData: null,
+      geoPositioningInfo:{},
+      currentDistance:999
     };
   }
+  componentDidMount() {
+  }
+   requestACCESS_FINE_LOCATIONPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Izin Mengakses GPS',
+          message: 'Aplikasi ini harus mengakses Lokasi anda',
+          buttonNeutral: 'Nanti Aja',
+          buttonNegative: 'Batal/Cegah',
+          buttonPositive: 'Izinkan',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        log('GPS Permission', 'Aplikasi Dapat mengakses lokasimu');
+        log('GPS Load . . .', 'Mencoba mengakses');
+        this.setState({ loadingStatement:"Mencoba mengakses GPS mu dengan Akurat . ."})
+        Geolocation.getCurrentPosition(
+          position => {
+            const { latitude, longitude, mocked } = position.coords;
+            log('Geo Position', position);
+            this.setState({
+              geoPositioningInfo: {
+                isMocked: mocked,
+                la: latitude,
+                lo: longitude,
+              }
+            })
+            log(
+              'Kordinat kamu berhasil didapatkan',
+              `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
+            );
+            this.setState({ loadingStatement: "Kordinat kamu berhasil didapatkan" })
+
+            const distance = getDistance(latitude, longitude);
+            this.setState({
+              currentDistance:distance
+            })
+            this.setState({ loadingStatement: "Jarak kamu ke lokasi absensi "+this.state.currentDistance+"m" })
+          },
+
+          error => {
+            log('Geo Position Error', `${error.code}, ${error.message}`);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+
+      } else {
+        log(
+          'GPS Permission Denied',
+          'Akses lokasi ditolak, aplikasi mungkin tidak dapat digunakan dengan baik',
+        );
+      }
+    } catch (err) {
+      log('Permission Request Error', err);
+    }
+  };
   render() {
     if (true) {
       return (

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const userImage = require('../image/akun.jpg');
 import log from '../utils/Logger'; // Import utilitas logging
 import { HitsData } from '../API/HitsData';
+import { FetchData } from '../API/FetchData';
 
 export default class HomeScreenGuru extends Component {
   constructor(props) {
@@ -22,7 +23,9 @@ export default class HomeScreenGuru extends Component {
     this.fetchAbsensiReport();
   }
    fetchAbsensiReport = async () => {
-    setLoading(true);
+     log("Loading", "load data report")
+
+    this.setState({loading:true})
     try {
       const result = await FetchData(
         `https://absekol-api.numpang.my.id/api/attendances/report`,
@@ -31,10 +34,16 @@ export default class HomeScreenGuru extends Component {
       this.setState({ jumlahPulang: result.totalCheckOut })
       this.setState({ jumlahMasuk: result.totalFakeGPS })
       this.setState({ jumlahSiswa: result.totalStudents })
+      log("Loaded result", result)
+
     } catch (error) {
       console.error(error);
+      log("Loading report Erorr",error )
+
     } finally {
-      setLoading(false);
+      this.setState({ loading: false })
+      log("Loading", "load data report completed")
+
     }
   };
   fetchUserData = async () => {
