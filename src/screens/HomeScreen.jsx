@@ -33,7 +33,8 @@ export default class HomeScreen extends Component {
       loadingStatement:"Loading . . .",
       userData: null,
       geoPositioningInfo:{},
-      currentDistance:999
+      currentDistance: 999, 
+      stateRangeAttendance:50
     };
   }
   componentDidMount() {

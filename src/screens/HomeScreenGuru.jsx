@@ -5,7 +5,7 @@ const userImage = require('../image/akun.jpg');
 import log from '../utils/Logger'; // Import utilitas logging
 import { HitsData } from '../API/HitsData';
 import { FetchData } from '../API/FetchData';
-
+import { useSelector } from 'react-redux';
 export default class HomeScreenGuru extends Component {
   constructor(props) {
     super(props);
