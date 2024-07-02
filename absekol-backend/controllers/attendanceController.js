@@ -7,9 +7,20 @@ const {
     getAttendanceCheckInByNisn,
     getAttendanceCheckOutByNisn,
     getAttendanceCheckIn,
-    getAttendanceCheckOut
+    getAttendanceCheckOut,
+    getAttendanceReport
 } = require('../services/attendanceServices');
-
+const getAttendanceReportController = async (req, res) => {
+    try {
+        const result = await getAttendanceReport();
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json({
+            errors: error.errors ? error.errors[0].message : "undfined case :" + error.message,
+            errorDetails: error
+        });
+    }
+}
 const getAttendanceController = async (req, res) => {
     try {
         const result = await getAttendance();
@@ -133,5 +144,6 @@ module.exports={
     getAttendanceCheckInByNisnController,
     getAttendanceCheckOutByNisnController,
     getAttendanceCheckInController,
-    getAttendanceCheckOutController
+    getAttendanceCheckOutController,
+    getAttendanceReportController
 }

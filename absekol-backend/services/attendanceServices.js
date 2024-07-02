@@ -4,6 +4,35 @@ const User = require('../models/User');
 const Role = require('../models/Role');
 const GpsLog = require('../models/GpsLog');
 const { Op } = require('sequelize');
+const getAttendanceReport = async () => {
+    try {
+        const totalCheckIn = await Attendance.count({
+            where: {
+                checkIn: {
+                    [Op.ne]: null
+                }
+            }
+        });
+
+        const totalCheckOut = await Attendance.count({
+            where: {
+                checkOut: {
+                    [Op.ne]: null
+                }
+            }
+        });
+
+        const totalFakeGPS = await Attendance.count({
+            where: {
+                isFakeGps: true
+            }
+        });
+
+        return { totalCheckIn, totalCheckOut, totalFakeGPS };
+    } catch (error) {
+        throw error.errors ? error : new Error(`Error fetching attendance report: ${error.message}`);
+    }
+};
 const getAttendance = async () => {
     try {
         const result = await Attendance.findAll({
@@ -215,5 +244,6 @@ module.exports = { getAttendance,
        getAttendanceCheckInByNisn,
        getAttendanceCheckOutByNisn,
     getAttendanceCheckIn,
-    getAttendanceCheckOut
+    getAttendanceCheckOut,
+    getAttendanceReport
     }

@@ -7,13 +7,15 @@ const { createAttendanceController,
     getAttendanceCheckInByNisnController,
     getAttendanceCheckOutByNisnController,
     getAttendanceCheckInController,
-    getAttendanceCheckOutController
+    getAttendanceCheckOutController,
+    getAttendanceReportController
  } = require('../controllers/attendanceController')
 
 const route = express.Router();
 
 route.get('/attendanceInfo/:nisn', getTopAttendanceByNisnController);
 route.get('/attendances', getAttendanceController);
+route.get('/attendances/report', getAttendanceReportController);
 route.post('/attendances', createAttendanceController);
 route.put('/attendances', updateAttendanceController);
 route.delete('/attendances/:id', deleteAttendanceController);
