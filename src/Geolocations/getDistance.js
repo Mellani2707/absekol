@@ -52,6 +52,7 @@ const getTargetCoordinates = async () => {
 export const getDistance = async (currentLa, currentLo) => {
   try {
     const targetCoordinates = await getTargetCoordinates();
+    log(`Mengambil nilai distance `, ` parameter ${currentLa}, ${currentLo} `);
     return geolibGetDistance(
       {latitude: currentLa, longitude: currentLo},
       {

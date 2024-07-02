@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,19 @@ import {
   TouchableOpacity,
   Alert,
   PermissionsAndroid,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { connect } from 'react-redux';
-import { FetchData } from '../API/FetchData';
-import { HitsData } from '../API/HitsData';
-import { KirimNotifWa } from '../API/KirimNotifWa';
-import { getConfigValue } from '../API/GetConfig';
-import { StoreNotifications } from '../API/StoreNotifications';
-import { getDistance } from '../Geolocations/getDistance';
+import {connect} from 'react-redux';
+import {FetchData} from '../API/FetchData';
+import {HitsData} from '../API/HitsData';
+import {KirimNotifWa} from '../API/KirimNotifWa';
+import {getConfigValue} from '../API/GetConfig';
+import {StoreNotifications} from '../API/StoreNotifications';
+import {getDistance} from '../Geolocations/getDistance';
 import log from '../utils/Logger'; // Import utilitas logging
 
-import { IndonesiaTimeConverter } from '../TimeZone/IndonesiaTimeConverter';
+import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
 import moment from 'moment-timezone';
 import Geolocation from 'react-native-geolocation-service';
 
@@ -30,20 +30,22 @@ class HomeScreen extends Component {
     super(props);
     this.state = {
       loading: true,
-      loadingStatement:"Loading . . .",
+      loadingStatement: 'Loading . . .',
       userData: null,
-      geoPositioningInfo:{},
-      currentDistance: 999, 
-      stateRangeAttendance:50
+      geoPositioningInfo: {},
+      currentDistance: 999,
+      stateRangeAttendance: 50,
     };
   }
   componentDidMount() {
+    this.GeolocationsInfo();
   }
-   requestACCESS_FINE_LOCATIONPermission = async () => {
-     this.setState({ loadingStatement: "Mencoba mengakses GPS mu dengan Akurat . ." })
-     this.setState({ loading: true })
-     log("Loading", this.state.loadingStatement)
-
+  requestACCESS_FINE_LOCATIONPermission = async () => {
+    this.setState({
+      loadingStatement: 'Mencoba mengakses GPS mu dengan Akurat . .',
+    });
+    this.setState({loading: true});
+    log('Loading', this.state.loadingStatement);
 
     try {
       const granted = await PermissionsAndroid.request(
@@ -59,39 +61,80 @@ class HomeScreen extends Component {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         log('GPS Permission', 'Aplikasi Dapat mengakses lokasimu');
         log('GPS Load . . .', 'Mencoba mengakses');
-        this.setState({ loadingStatement:"Mencoba mengakses GPS mu dengan Akurat . ."})
-        log("GPS Load", this.state.loadingStatement)
+        this.setState({
+          loadingStatement: 'Mencoba mengakses GPS mu dengan Akurat . .',
+        });
+        log('GPS Load', this.state.loadingStatement);
 
-        Geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude, mocked } = position.coords;
-            log('Geo Position', position);
-            this.setState({
-              geoPositioningInfo: {
-                isMocked: mocked,
-                la: latitude,
-                lo: longitude,
-              }
-            })
-            
-            this.setState({
-              loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}` });
-            log(
-              'Kordinat kamu berhasil didapatkan', this.state.loadingStatement );
+        // Geolocation.getCurrentPosition(
+        //   position => {
+        //     const {latitude, longitude, mocked} = position.coords;
+        //     log('Geo Position', position);
+        //     this.setState({
+        //       geoPositioningInfo: {
+        //         isMocked: mocked,
+        //         la: latitude,
+        //         lo: longitude,
+        //       },
+        //     });
 
-            const distance = getDistance(latitude, longitude);
-            this.setState({
-              currentDistance:distance
-            })
-            this.setState({ loadingStatement: "Jarak kamu ke lokasi absensi "+this.state.currentDistance+"m" })
-          },
+        //     this.setState({
+        //       loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${latitude} dan lo: ${longitude}`,
+        //     });
+        //     log(
+        //       'Kordinat kamu berhasil didapatkan',
+        //       this.state.loadingStatement,
+        //     );
 
-          error => {
-            log('Geo Position Error', `${error.code}, ${error.message}`);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-        );
+        //     const distance = getDistance(latitude, longitude);
+        //     this.setState({
+        //       currentDistance: distance,
+        //     });
+        //     this.setState({
+        //       loadingStatement:
+        //         'Jarak kamu ke lokasi absensi ' +
+        //         this.state.currentDistance +
+        //         'm',
+        //     });
+        //   },
 
+        //   error => {
+        //     log('Geo Position Error', `${error.code}, ${error.message}`);
+        //   },
+        //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        // );
+        await new Promise((resolve, reject) => {
+          log('Promise', 'start');
+          Geolocation.getCurrentPosition(
+            position => {
+              const {latitude, longitude, mocked} = position.coords;
+              log('Geo Position', position);
+              this.setState(
+                {
+                  geoPositioningInfo: {
+                    isMocked: mocked,
+                    la: latitude,
+                    lo: longitude,
+                  },
+                  loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${latitude} dan lo: ${longitude}`,
+                },
+                () => {
+                  log(
+                    'Kordinat kamu berhasil didapatkan',
+                    this.state.loadingStatement,
+                  );
+                  resolve('Operation was successful!');
+                },
+              );
+            },
+            error => {
+              log('Geo Position Error', `${error.code}, ${error.message}`);
+              reject(error);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+          log('Promise', 'end');
+        });
       } else {
         log(
           'GPS Permission Denied',
@@ -102,31 +145,55 @@ class HomeScreen extends Component {
       log('Permission Request Error', err);
     }
   };
-   GeolocationsInfo = async () => {
-     while (this.state.currentDistance > this.state.stateRangeAttendance & this.state.currentDistance < 1){
-      await this.requestACCESS_FINE_LOCATIONPermission()
+  GeolocationsInfo = async () => {
+    while (this.state.currentDistance > this.state.stateRangeAttendance) {
+      await this.requestACCESS_FINE_LOCATIONPermission();
 
-       const ketetapan = await getConfigValue('ketetapan_jarak_absensi')
-       await this.setState({stateRangeAttendance:ketetapan})
+      //mengambil nilai jarak setelah kordinat didapatkan
+      log(
+        'Kordinat Info after Geolocation get',
+        `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
+      );
+      const distance = getDistance(
+        geoPositioningInfo.la,
+        geoPositioningInfo.lo,
+      );
+      log(`Nilai distance `, distance);
 
+      this.setState({currentDistance: distance});
+      this.setState({
+        loadingStatement:
+          'Jarak kamu ke lokasi absensi ' + this.state.currentDistance + 'm',
+      });
 
-       await this.setState({
-         loadingStatement: `jarak kamu kelokasi absen baru ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan maksimal ${this.state.currentDistance}m. Kami mencoba memuat data GPS kembali  . . .`,
-       });
-       await this.setState({ loading: false });
-       log('reloading GPS . .', this.state.loadingStatement);
-     }
-     await this.setState({
-       loadingStatement: 'load data GPS sudah selesai hingga akurat. .',
-     });
-     await this.setState({ loading: false });
-     log('Loading GPS Success', this.state.loadingStatement);
+      //mengambil ketetapan jarak
+      await this.setState({
+        loadingStatement: `jarak kamu kelokasi absen  ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan kami mencoba memuat data terbaru  . . .`,
+      });
+      log('loading ketetapan_jarak_absensi . .', this.state.loadingStatement);
+      const ketetapan = await getConfigValue('ketetapan_jarak_absensi');
+      await this.setState({stateRangeAttendance: ketetapan});
+      //selesai mengambil ketapan
+
+      await this.setState({
+        loadingStatement: `jarak kamu kelokasi absen baru ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan maksimal ${this.state.currentDistance}m. Kami mencoba memuat data GPS kembali  . . .`,
+      });
+      await this.setState({loading: true});
+      log('reloading GPS . .', this.state.loadingStatement);
+    }
+
+    //gps modul sudah berhasil
+    await this.setState({
+      loadingStatement: 'load data GPS sudah selesai hingga akurat. .',
+    });
+    await this.setState({loading: false});
+    log('Loading GPS Success', this.state.loadingStatement);
   };
   fetchUserData = async () => {
     await this.setState({
       loadingStatement: 'load data user from redux useSelector. .',
     });
-    await this.setState({ loading: true });
+    await this.setState({loading: true});
     log('Loading redux', this.state.loadingStatement);
     //ambil data user dari redux
     // const user = await useSelector(state => state.user);
@@ -136,7 +203,7 @@ class HomeScreen extends Component {
     });
 
     log('User Data -->', this.state.userData);
-    this.setState({ loading: false });
+    this.setState({loading: false});
     log('Loading', 'load data user completed');
   };
   render() {
@@ -150,9 +217,13 @@ class HomeScreen extends Component {
     }
     return (
       <View>
-        <Text> Berhasil mendapatkan jarak absensi yang sesuai {this.state.currentDistance}</Text>
+        <Text>
+          {' '}
+          Berhasil mendapatkan jarak absensi yang sesuai{' '}
+          {this.state.currentDistance}
+        </Text>
       </View>
-    )
+    );
   }
 }
 
@@ -208,7 +279,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -270,7 +341,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -302,7 +373,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
