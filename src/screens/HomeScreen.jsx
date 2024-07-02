@@ -38,6 +38,7 @@ class HomeScreen extends Component {
       userStudentData: null,
       lastCheckIn: {},
       lastCheckOut: {},
+      profileImage:'L'
     };
   }
   componentDidMount() {
@@ -280,7 +281,8 @@ class HomeScreen extends Component {
     await this.setState({
       userData: this.props.user.user,
       userStudentData: this.props.user.user.Student,
-      profileImage: userImage,
+      profileImage :
+        this.props.user.user.jenisKelamin === 'L' ? maleImage : femaleImage
     });
 
     log('User Data -->', this.state.userData);
@@ -463,6 +465,14 @@ class HomeScreen extends Component {
     }
   };
   render() {
+    const { 
+      profileImage,
+      userStudentData,
+      userData,
+      lastCheckIn,
+      lastCheckOut
+      
+     }=this.state
     if (this.state.loading) {
       return (
         <View style={styles.loadingContainer}>
@@ -471,13 +481,105 @@ class HomeScreen extends Component {
         </View>
       );
     }
+    // return (
+    //   <View>
+    //     <Text>
+    //       {' '}
+    //       Berhasil mendapatkan jarak absensi yang sesuai{' '}
+    //       {this.state.currentDistance}
+    //     </Text>
+    //   </View>
+    // );
     return (
-      <View>
-        <Text>
-          {' '}
-          Berhasil mendapatkan jarak absensi yang sesuai{' '}
-          {this.state.currentDistance}
-        </Text>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerTop}>
+            <Image source={require('../image/smk.png')} style={styles.logo} />
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.headerTitle}>Absensi Apel SMKN 1</Text>
+              <Text style={styles.headerSubtitle}>SINTUK TOBOH GADANG</Text>
+            </View>
+          </View>
+          <View style={styles.profile}>
+            <Image source={profileImage} style={styles.profilePic} />
+            <View>
+              <Text style={styles.profileName}>
+                {userStudentData ? userStudentData.nama : userData.username}
+              </Text>
+              <Text style={styles.profileNumber}>{userData.noWa}</Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.notificationButton}
+            onPress={() => navigation.navigate('Notification')}>
+            <Icon name="notifications-outline" size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Buttons */}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleAbsensi('in')}>
+            <Icon name="log-in-outline" size={40} color="#4CAF50" />
+            <Text style={styles.buttonText}>Masuk</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleAbsensi('out')}>
+            <Icon name="log-out-outline" size={40} color="#E91E63" />
+            <Text style={styles.buttonText}>Pulang</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Information */}
+        <View style={styles.infoContainer}>
+        {/* lastCheckIn */}
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
+            <Text style={styles.infoText}>
+              {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
+            </Text>
+            <TouchableOpacity
+              style={styles.HistoryButton}
+              onPress={() => navigation.navigate('HistoryMasuk')}>
+              <Icon name="timer-outline" size={30} color="#998988" />
+            </TouchableOpacity>
+          </View>
+          {/* lastCheckOut */}
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
+            <Text style={styles.infoText}>
+              {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
+            </Text>
+            <TouchableOpacity
+              style={styles.HistoryButton}
+              onPress={() => navigation.navigate('HistoryKeluar')}>
+              <Icon name="timer-outline" size={30} color="#998988" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoTitle}>Informasi Lokasi</Text>
+            <InfoLokasi />
+            {/* <TouchableOpacity
+            style={styles.HistoryButton}
+            onPress={() => navigation.navigate('HistoryLokasi')}>
+            <Icon name="navigate-circle-outline" size={30} color="#998988" />
+          </TouchableOpacity> */}
+          </View>
+        </View>
+
+        {/* Map
+       */}
+        {/*
+       <View style={styles.mapContainer}>
+        <Text style={styles.mapTitle}>Lokasi Saat ini</Text>
+        <View style={styles.mapPlaceholder}>
+          <Text>Map Placeholder</Text>
+        </View>
+      </View>
+      */}
       </View>
     );
   }
