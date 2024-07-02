@@ -198,7 +198,7 @@ class HomeScreen extends Component {
             <View>
               <Text style={styles.infoText}>
                 Kamu berada sudah berada diposisi {currentDistance}m dari Lokasi
-                pengambilan Absen seharusnya.
+                pengambilan Absen seharusnya (max:{stateRangeAttendance}m).
               </Text>
             </View>
           );
