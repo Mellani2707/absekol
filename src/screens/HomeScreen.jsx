@@ -35,11 +35,9 @@ class HomeScreen extends Component {
       geoPositioningInfo: {},
       currentDistance: Infinity,
       stateRangeAttendance: 50,
-      userStudentData:null,
-      lastCheckIn:{},
-      lastCheckOut:{}
-
-
+      userStudentData: null,
+      lastCheckIn: {},
+      lastCheckOut: {},
     };
   }
   componentDidMount() {
@@ -47,8 +45,6 @@ class HomeScreen extends Component {
     this.fetchUserData();
   }
   requestACCESS_FINE_LOCATIONPermission = async () => {
-
-
     log('Loading', this.state.loadingStatement);
 
     try {
@@ -77,7 +73,7 @@ class HomeScreen extends Component {
           log('Promise', 'start');
           Geolocation.getCurrentPosition(
             position => {
-              const { latitude, longitude, mocked } = position.coords;
+              const {latitude, longitude, mocked} = position.coords;
               log('Geo Position', position);
               this.setState(
                 {
@@ -101,13 +97,12 @@ class HomeScreen extends Component {
               log('Geo Position Error', `${error.code}, ${error.message}`);
               reject(error);
             },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
           );
           log('Promise', 'end');
         });
 
         log('Promise', 'Finish');
-
       } else {
         log(
           'GPS Permission Denied',
@@ -129,15 +124,12 @@ class HomeScreen extends Component {
 
       if (this.state.geoPositioningInfo) {
         // Mengambil nilai jarak setelah kordinat didapatkan
-        const { la, lo } = this.state.geoPositioningInfo;
-        log(
-          'Kordinat Info after Geolocation get',
-          `la : ${la} dan lo: ${lo}`,
-        );
-        const distance = getDistance(la, lo);
+        const {la, lo} = this.state.geoPositioningInfo;
+        log('Kordinat Info after Geolocation get', `la : ${la} dan lo: ${lo}`);
+        const distance = await getDistance(la, lo);
         log('Nilai distance', distance);
 
-        this.setState({ currentDistance: distance });
+        this.setState({currentDistance: distance});
         this.setState({
           loadingStatement:
             'Jarak kamu ke lokasi absensi ' + this.state.currentDistance + 'm',
@@ -145,7 +137,7 @@ class HomeScreen extends Component {
 
         // Mengambil ketetapan jarak
         const ketetapan = await getConfigValue('ketetapan_jarak_absensi');
-        this.setState({ stateRangeAttendance: ketetapan });
+        this.setState({stateRangeAttendance: ketetapan});
 
         this.setState({
           loadingStatement: `Jarak kamu kelokasi absen baru ${this.state.currentDistance}m, agar memenuhi jarak yang ditentukan maksimal ${this.state.stateRangeAttendance}m. Kami mencoba memuat data GPS kembali . . .`,
@@ -189,7 +181,6 @@ class HomeScreen extends Component {
   //       });
   //       log('GPS Load', this.state.loadingStatement);
 
-    
   //       await new Promise((resolve, reject) => {
   //         log('Promise', 'start');
   //         Geolocation.getCurrentPosition(
@@ -296,7 +287,7 @@ class HomeScreen extends Component {
     this.setState({loading: false});
     log('Loading', 'load data user completed');
   };
-   handleAbsensi = async type => {
+  handleAbsensi = async type => {
     try {
       const currentDate = moment().tz('Asia/Jakarta').format();
       let data = {
@@ -314,7 +305,10 @@ class HomeScreen extends Component {
 
       const jarakDenganTitikAbsensi = currentDistance;
       data.distance = jarakDenganTitikAbsensi;
-      log('Jarak dengan Titik Absensi sebelum dibandingkan', jarakDenganTitikAbsensi);
+      log(
+        'Jarak dengan Titik Absensi sebelum dibandingkan',
+        jarakDenganTitikAbsensi,
+      );
       log('Jarak Maksimal', stateRangeAttendance);
 
       let dataNotifikasi = {
@@ -338,8 +332,9 @@ class HomeScreen extends Component {
           );
           this.fetchInfoAbsen(userStudentData.nisn);
 
-          dataNotifikasi.message = `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'
-            } berhasil`;
+          dataNotifikasi.message = `Absensi ${
+            type === 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
           dataNotifikasi.receiver = userData.noWa;
           dataNotifikasi.attendanceId = result.id;
           dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
@@ -359,8 +354,9 @@ class HomeScreen extends Component {
             currentRange: jarakDenganTitikAbsensi,
           });
 
-          dataNotifikasi.message = `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'
-            } berhasil`;
+          dataNotifikasi.message = `Absensi ${
+            type === 'in' ? 'Masuk' : 'Pulang'
+          } berhasil`;
           dataNotifikasi.receiver = userStudentData.hpOrtu;
           dataNotifikasi.status =
             'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
@@ -410,8 +406,8 @@ class HomeScreen extends Component {
       );
     }
   };
-   InfoLokasi = () => {
-     const { currentDistance, stateRangeAttendance } = this.state;
+  InfoLokasi = () => {
+    const {currentDistance, stateRangeAttendance} = this.state;
     if (currentDistance > 0) {
       if (currentDistance > stateRangeAttendance) {
         return (
@@ -444,18 +440,18 @@ class HomeScreen extends Component {
       );
     }
   };
-   fetchInfoAbsen = async nisn => {
-     this.setState({
+  fetchInfoAbsen = async nisn => {
+    this.setState({
       loadingStatement: 'Load Attendance Info . .',
       loading: true,
     });
-     log('Loading fetchInfoAbsen', this.state.loadingStatement);
+    log('Loading fetchInfoAbsen', this.state.loadingStatement);
     try {
       const result = await FetchData(
         'https://absekol-api.numpang.my.id/api/attendanceInfo/' + nisn,
       );
-      this.setState({ lastCheckIn: result.checkInTop })
-      this.setState({ lastCheckOut: result.checkOutTop })
+      this.setState({lastCheckIn: result.checkInTop});
+      this.setState({lastCheckOut: result.checkOutTop});
     } catch (error) {
       log('Fetch Info Error', error);
     } finally {
