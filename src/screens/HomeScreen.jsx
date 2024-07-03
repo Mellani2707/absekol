@@ -38,12 +38,8 @@ class HomeScreen extends Component {
       userStudentData: null,
       lastCheckIn: {},
       lastCheckOut: {},
-      profileImage:'L'
+      profileImage: 'L',
     };
-  }
-  componentDidMount() {
-    this.GeolocationsInfo();
-    this.fetchUserData();
   }
   requestACCESS_FINE_LOCATIONPermission = async () => {
     log('Loading', this.state.loadingStatement);
@@ -114,7 +110,25 @@ class HomeScreen extends Component {
       log('Permission Request Error', err);
     }
   };
+  fetchUserData = async () => {
+    this.setState({
+      loadingStatement: 'load data user from redux useSelector. .',
+    });
+    this.setState({loading: true});
+    log('Loading redux', this.state.loadingStatement);
+    //ambil data user dari redux
+    // const user = await useSelector(state => state.user);
+    this.setState({
+      userData: this.props.user.user,
+      userStudentData: this.props.user.user.Student,
+      profileImage:
+        this.props.user.user.jenisKelamin === 'L' ? maleImage : femaleImage,
+    });
 
+    log('User Data -->', this.state.userData);
+    this.setState({loading: false});
+    log('Loading', 'load data user completed');
+  };
   GeolocationsInfo = async () => {
     this.setState({
       loadingStatement: 'Mencoba mengakses GPS mu dengan Akurat . .',
@@ -149,330 +163,219 @@ class HomeScreen extends Component {
     }
 
     // GPS modul sudah berhasil
+    //selanjutnya ambil info user dulu
     this.setState({
       loadingStatement: 'Load data GPS sudah selesai hingga akurat . .',
-      loading: false,
+      // loading: false,
     });
     log('Loading GPS Success', this.state.loadingStatement);
+    this.fetchUserData();
   };
 
-  // requestACCESS_FINE_LOCATIONPermission = async () => {
-  //   this.setState({
-  //     loadingStatement: 'Mencoba mengakses GPS mu dengan Akurat . .',
-  //   });
-  //   this.setState({loading: true});
-  //   log('Loading', this.state.loadingStatement);
+  componentDidMount() {
+    this.GeolocationsInfo();
 
-  //   try {
-  //     const granted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //       {
-  //         title: 'Izin Mengakses GPS',
-  //         message: 'Aplikasi ini harus mengakses Lokasi anda',
-  //         buttonNeutral: 'Nanti Aja',
-  //         buttonNegative: 'Batal/Cegah',
-  //         buttonPositive: 'Izinkan',
-  //       },
-  //     );
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //       log('GPS Permission', 'Aplikasi Dapat mengakses lokasimu');
-  //       log('GPS Load . . .', 'Mencoba mengakses');
-  //       this.setState({
-  //         loadingStatement: 'Mencoba mengakses GPS mu dengan Akurat . .',
-  //       });
-  //       log('GPS Load', this.state.loadingStatement);
+    // this.fetchUserData();
+  }
 
-  //       await new Promise((resolve, reject) => {
-  //         log('Promise', 'start');
-  //         Geolocation.getCurrentPosition(
-  //           position => {
-  //             const {latitude, longitude, mocked} = position.coords;
-  //             log('Geo Position', position);
-  //             this.setState(
-  //               {
-  //                 geoPositioningInfo: {
-  //                   isMocked: mocked,
-  //                   la: latitude,
-  //                   lo: longitude,
-  //                 },
-  //                 loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${latitude} dan lo: ${longitude}`,
-  //               },
-  //               () => {
-  //                 log(
-  //                   'Kordinat kamu berhasil didapatkan',
-  //                   this.state.loadingStatement,
-  //                 );
-  //                 resolve('Operation was successful!');
-  //               },
-  //             );
-  //           },
-  //           error => {
-  //             log('Geo Position Error', `${error.code}, ${error.message}`);
-  //             reject(error);
-  //           },
-  //           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-  //         );
-  //         log('Promise', 'end');
-  //       });
-  //       log('Promise', 'Finish');
-
-  //     } else {
-  //       log(
-  //         'GPS Permission Denied',
-  //         'Akses lokasi ditolak, aplikasi mungkin tidak dapat digunakan dengan baik',
-  //       );
-  //     }
-  //   } catch (err) {
-  //     log('Permission Request Error', err);
-  //   }
-  // };
-  // GeolocationsInfo = async () => {
-  //   while (this.state.currentDistance > this.state.stateRangeAttendance) {
-  //     await this.requestACCESS_FINE_LOCATIONPermission();
-
-  //     //mengambil nilai jarak setelah kordinat didapatkan
-  //     log(
-  //       'Kordinat Info after Geolocation get',
-  //       `la : ${geoPositioningInfo.la} dan lo: ${geoPositioningInfo.lo}`,
-  //     );
-  //     const distance = getDistance(
-  //       geoPositioningInfo.la,
-  //       geoPositioningInfo.lo,
-  //     );
-  //     log(`Nilai distance `, distance);
-
-  //     this.setState({currentDistance: distance});
-  //     this.setState({
-  //       loadingStatement:
-  //         'Jarak kamu ke lokasi absensi ' + this.state.currentDistance + 'm',
-  //     });
-
-  //     //mengambil ketetapan jarak
-  //     await this.setState({
-  //       loadingStatement: `jarak kamu kelokasi absen  ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan kami mencoba memuat data terbaru  . . .`,
-  //     });
-  //     log('loading ketetapan_jarak_absensi . .', this.state.loadingStatement);
-  //     const ketetapan = await getConfigValue('ketetapan_jarak_absensi');
-  //     await this.setState({stateRangeAttendance: ketetapan});
-  //     //selesai mengambil ketapan
-
-  //     await this.setState({
-  //       loadingStatement: `jarak kamu kelokasi absen baru ${this.state.currentDistance}m,agar memenuhi jarak yang ditentukan maksimal ${this.state.currentDistance}m. Kami mencoba memuat data GPS kembali  . . .`,
-  //     });
-  //     await this.setState({loading: true});
-  //     log('reloading GPS . .', this.state.loadingStatement);
-  //   }
-
-  //   //gps modul sudah berhasil
-  //   await this.setState({
-  //     loadingStatement: 'load data GPS sudah selesai hingga akurat. .',
-  //   });
-  //   await this.setState({loading: false});
-  //   log('Loading GPS Success', this.state.loadingStatement);
-  // };
-  fetchUserData = async () => {
-    await this.setState({
-      loadingStatement: 'load data user from redux useSelector. .',
-    });
-    await this.setState({loading: true});
-    log('Loading redux', this.state.loadingStatement);
-    //ambil data user dari redux
-    // const user = await useSelector(state => state.user);
-    await this.setState({
-      userData: this.props.user.user,
-      userStudentData: this.props.user.user.Student,
-      profileImage :
-        this.props.user.user.jenisKelamin === 'L' ? maleImage : femaleImage
-    });
-
-    log('User Data -->', this.state.userData);
-    this.setState({loading: false});
-    log('Loading', 'load data user completed');
-  };
-  handleAbsensi = async type => {
-    try {
-      const currentDate = moment().tz('Asia/Jakarta').format();
-      let data = {
-        nisn: userStudentData.nisn,
-        latitude: geoPositioningInfo ? geoPositioningInfo.la : '-0.9999999999',
-        longtitude: geoPositioningInfo
-          ? geoPositioningInfo.lo
-          : '100.999999999',
-        isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
-      };
-
-      log('Absensi Data Before Distance', data);
-      // perbarui informasi jarak ke lokasi
-      this.GeolocationsInfo();
-
-      const jarakDenganTitikAbsensi = currentDistance;
-      data.distance = jarakDenganTitikAbsensi;
-      log(
-        'Jarak dengan Titik Absensi sebelum dibandingkan',
-        jarakDenganTitikAbsensi,
-      );
-      log('Jarak Maksimal', stateRangeAttendance);
-
-      let dataNotifikasi = {
-        uid: userData.uid,
-      };
-
-      if (!geoPositioningInfo.isMocked) {
-        if (jarakDenganTitikAbsensi < stateRangeAttendance) {
-          if (type === 'out') {
-            data.checkOut = currentDate;
-          } else {
-            data.checkIn = currentDate;
-          }
-          const result = await HitsData(
-            'https://absekol-api.numpang.my.id/api/attendances',
-            data,
+  render() {
+    const InfoLokasi = () => {
+      const {currentDistance, stateRangeAttendance} = this.state;
+      if (currentDistance > 0) {
+        if (currentDistance > stateRangeAttendance) {
+          return (
+            <View>
+              <Text style={styles.infoText}>
+                Kamu berada {currentDistance}m dari Lokasi pengambilan Absen
+                seharusnya. cobalah bergerak
+                {currentDistance - stateRangeAttendance}m lagi hingga jarak kamu
+                sudah tidak lebih dari {stateRangeAttendance}
+              </Text>
+            </View>
           );
-          Alert.alert(
-            'Success',
-            `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'} berhasil`,
-          );
-          this.fetchInfoAbsen(userStudentData.nisn);
-
-          dataNotifikasi.message = `Absensi ${
-            type === 'in' ? 'Masuk' : 'Pulang'
-          } berhasil`;
-          dataNotifikasi.receiver = userData.noWa;
-          dataNotifikasi.attendanceId = result.id;
-          dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
-          StoreNotifications(dataNotifikasi);
-
-          KirimNotifWa({
-            noWa: userData.noWa,
-            nama: userStudentData.nama,
-            currentDate: currentDate,
-            status: 'absekol_suksess',
-          });
-          KirimNotifWa({
-            noWa: userStudentData.hpOrtu,
-            nama: userStudentData.nama,
-            currentDate: currentDate,
-            status: 'absekol_sukses_ortu',
-            currentRange: jarakDenganTitikAbsensi,
-          });
-
-          dataNotifikasi.message = `Absensi ${
-            type === 'in' ? 'Masuk' : 'Pulang'
-          } berhasil`;
-          dataNotifikasi.receiver = userStudentData.hpOrtu;
-          dataNotifikasi.status =
-            'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
-          StoreNotifications(dataNotifikasi);
         } else {
-          const result = await HitsData(
-            'https://absekol-api.numpang.my.id/api/attendances',
-            data,
+          return (
+            <View>
+              <Text style={styles.infoText}>
+                Kamu berada sudah berada diposisi {currentDistance}m dari Lokasi
+                pengambilan Absen seharusnya (max:{stateRangeAttendance}m).
+              </Text>
+            </View>
           );
-          KirimNotifWa({
-            noWa: userData.noWa,
-            nama: userStudentData.nama,
-            currentDate: currentDate,
-            status: 'absekol_gagal_terlalujauh',
-            currentRange: jarakDenganTitikAbsensi,
-            stateRange: stateRangeAttendance,
-          });
-
-          dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
-          dataNotifikasi.receiver = userData.noWa;
-          dataNotifikasi.attendanceId = result.id;
-          dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
-          StoreNotifications(dataNotifikasi);
-
-          Alert.alert('Peringatan', 'Lokasi mu terlalu jauh!');
         }
       } else {
-        KirimNotifWa({
-          noWa: userData.noWa,
-          nama: userStudentData.nama,
-          currentDate: currentDate,
-          status: 'absekol_gagal',
-        });
-
-        dataNotifikasi.message =
-          'Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!';
-        dataNotifikasi.receiver = userData.noWa;
-        dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
-        StoreNotifications(dataNotifikasi);
-
-        Alert.alert('Peringatan', 'Lokasi Anda Palsu, Matikan Fake GPS Anda!');
-      }
-    } catch (error) {
-      Alert.alert(
-        'Error',
-        'An error occurred while taking attendance: ' + error.message,
-      );
-    }
-  };
-  InfoLokasi = () => {
-    const {currentDistance, stateRangeAttendance} = this.state;
-    if (currentDistance > 0) {
-      if (currentDistance > stateRangeAttendance) {
         return (
           <View>
             <Text style={styles.infoText}>
-              Kamu berada {currentDistance}m dari Lokasi pengambilan Absen
-              seharusnya. cobalah bergerak
-              {currentDistance - stateRangeAttendance}m lagi hingga jarak kamu
-              sudah tidak lebih dari {stateRangeAttendance}
-            </Text>
-          </View>
-        );
-      } else {
-        return (
-          <View>
-            <Text style={styles.infoText}>
-              Kamu berada sudah berada diposisi {currentDistance}m dari Lokasi
-              pengambilan Absen seharusnya.
+              Belum ada Info lokasi, coba ambil absen dulu nanti kami infokan
             </Text>
           </View>
         );
       }
-    } else {
-      return (
-        <View>
-          <Text style={styles.infoText}>
-            Belum ada Info lokasi, coba ambil absen dulu nanti kami infokan
-          </Text>
-        </View>
-      );
-    }
-  };
-  fetchInfoAbsen = async nisn => {
-    this.setState({
-      loadingStatement: 'Load Attendance Info . .',
-      loading: true,
-    });
-    log('Loading fetchInfoAbsen', this.state.loadingStatement);
-    try {
-      const result = await FetchData(
-        'https://absekol-api.numpang.my.id/api/attendanceInfo/' + nisn,
-      );
-      this.setState({lastCheckIn: result.checkInTop});
-      this.setState({lastCheckOut: result.checkOutTop});
-    } catch (error) {
-      log('Fetch Info Error', error);
-    } finally {
+    };
+    const fetchInfoAbsen = async nisn => {
       this.setState({
-        loadingStatement: 'Load Attendance Info completed.',
-        loading: false,
+        loadingStatement: 'Load Attendance Info . .',
+        loading: true,
       });
       log('Loading fetchInfoAbsen', this.state.loadingStatement);
-    }
-  };
-  render() {
-    const { 
-      profileImage,
-      userStudentData,
-      userData,
-      lastCheckIn,
-      lastCheckOut
-      
-     }=this.state
+      try {
+        const result = await FetchData(
+          'https://absekol-api.numpang.my.id/api/attendanceInfo/' + nisn,
+        );
+        this.setState({lastCheckIn: result.checkInTop});
+        this.setState({lastCheckOut: result.checkOutTop});
+        log('Info Absensi Terakhir', result);
+      } catch (error) {
+        log('Fetch Info Error', error);
+      } finally {
+        this.setState({
+          loadingStatement: 'Load Attendance Info completed.',
+          loading: false,
+        });
+        log('Loading fetchInfoAbsen', this.state.loadingStatement);
+      }
+    };
+    const handleAbsensi = async type => {
+      try {
+        const currentDate = moment().tz('Asia/Jakarta').format();
+        const {
+          geoPositioningInfo,
+          userStudentData,
+          currentDistance,
+          stateRangeAttendance,
+          userData,
+        } = this.state;
+
+        let data = {
+          nisn: userStudentData.nisn,
+          latitude: geoPositioningInfo
+            ? geoPositioningInfo.la
+            : '-0.9999999999',
+          longtitude: geoPositioningInfo
+            ? geoPositioningInfo.lo
+            : '100.999999999',
+          isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
+        };
+
+        log('Absensi Data Before Distance', data);
+        // perbarui informasi jarak ke lokasi
+        // this.GeolocationsInfo();
+
+        const jarakDenganTitikAbsensi = currentDistance;
+        data.distance = jarakDenganTitikAbsensi;
+        log(
+          'Jarak dengan Titik Absensi sebelum dibandingkan',
+          jarakDenganTitikAbsensi,
+        );
+        log('Jarak Maksimal', stateRangeAttendance);
+
+        let dataNotifikasi = {
+          uid: userData.uid,
+        };
+
+        if (!geoPositioningInfo.isMocked) {
+          if (jarakDenganTitikAbsensi < stateRangeAttendance) {
+            if (type === 'out') {
+              data.checkOut = currentDate;
+            } else {
+              data.checkIn = currentDate;
+            }
+            const result = await HitsData(
+              'https://absekol-api.numpang.my.id/api/attendances',
+              data,
+            );
+            Alert.alert(
+              'Success',
+              `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'} berhasil`,
+            );
+            fetchInfoAbsen(userStudentData.nisn);
+
+            dataNotifikasi.message = `Absensi ${
+              type === 'in' ? 'Masuk' : 'Pulang'
+            } berhasil`;
+            dataNotifikasi.receiver = userData.noWa;
+            dataNotifikasi.attendanceId = result.id;
+            dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
+            StoreNotifications(dataNotifikasi);
+
+            KirimNotifWa({
+              noWa: userData.noWa,
+              nama: userStudentData.nama,
+              currentDate: currentDate,
+              status: 'absekol_suksess',
+            });
+            KirimNotifWa({
+              noWa: userStudentData.hpOrtu,
+              nama: userStudentData.nama,
+              currentDate: currentDate,
+              status: 'absekol_sukses_ortu',
+              currentRange: jarakDenganTitikAbsensi,
+            });
+
+            dataNotifikasi.message = `Absensi ${
+              type === 'in' ? 'Masuk' : 'Pulang'
+            } berhasil`;
+            dataNotifikasi.receiver = userStudentData.hpOrtu;
+            dataNotifikasi.status =
+              'Notifikasi Dikrim  ke Orang Tua via WhatsApp';
+            StoreNotifications(dataNotifikasi);
+          } else {
+            const result = await HitsData(
+              'https://absekol-api.numpang.my.id/api/attendances',
+              data,
+            );
+            KirimNotifWa({
+              noWa: userData.noWa,
+              nama: userStudentData.nama,
+              currentDate: currentDate,
+              status: 'absekol_gagal_terlalujauh',
+              currentRange: jarakDenganTitikAbsensi,
+              stateRange: stateRangeAttendance,
+            });
+
+            dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
+            dataNotifikasi.receiver = userData.noWa;
+            dataNotifikasi.attendanceId = result.id;
+            dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
+            StoreNotifications(dataNotifikasi);
+
+            Alert.alert('Peringatan', 'Lokasi mu terlalu jauh!');
+          }
+        } else {
+          KirimNotifWa({
+            noWa: userData.noWa,
+            nama: userStudentData.nama,
+            currentDate: currentDate,
+            status: 'absekol_gagal',
+          });
+
+          dataNotifikasi.message =
+            'Pengambilan Absensi Gagal. Lokasi Anda Palsu, Matikan Fake GPS Anda!';
+          dataNotifikasi.receiver = userData.noWa;
+          dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';
+          StoreNotifications(dataNotifikasi);
+
+          Alert.alert(
+            'Peringatan',
+            'Lokasi Anda Palsu, Matikan Fake GPS Anda!',
+          );
+        }
+      } catch (error) {
+        Alert.alert(
+          'Error',
+          'An error occurred while taking attendance: ' + error.message,
+        );
+      }
+    };
+    const Test = async param => {
+      log('Test men', 'Ok men' + param);
+    };
+
+    const {profileImage, userStudentData, userData, lastCheckIn, lastCheckOut} =
+      this.state;
+    const {navigation} = this.props;
+
     if (this.state.loading) {
       return (
         <View style={styles.loadingContainer}>
@@ -535,11 +438,13 @@ class HomeScreen extends Component {
 
         {/* Information */}
         <View style={styles.infoContainer}>
-        {/* lastCheckIn */}
+          {/* lastCheckIn */}
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
+              {lastCheckIn.checkIn
+                ? IndonesiaTimeConverter(lastCheckIn.checkIn)
+                : '-'}
             </Text>
             <TouchableOpacity
               style={styles.HistoryButton}
@@ -551,7 +456,9 @@ class HomeScreen extends Component {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckOut ? IndonesiaTimeConverter(lastCheckOut.checkOut) : '-'}
+              {lastCheckOut.checkOut
+                ? IndonesiaTimeConverter(lastCheckOut.checkOut)
+                : '-'}
             </Text>
             <TouchableOpacity
               style={styles.HistoryButton}
@@ -571,7 +478,7 @@ class HomeScreen extends Component {
         </View>
 
         {/* Map
-       */}
+         */}
         {/*
        <View style={styles.mapContainer}>
         <Text style={styles.mapTitle}>Lokasi Saat ini</Text>

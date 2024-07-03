@@ -178,6 +178,7 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 export default connect(mapStateToProps)(HomeScreenGuru);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
