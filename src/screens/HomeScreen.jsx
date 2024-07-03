@@ -180,7 +180,7 @@ class HomeScreen extends Component {
 
   render() {
     const InfoLokasi = () => {
-      const {currentDistance, stateRangeAttendance} = this.state;
+      const { currentDistance, stateRangeAttendance, geoPositioningInfo } = this.state;
       if (currentDistance > 0) {
         if (currentDistance > stateRangeAttendance) {
           return (
@@ -191,6 +191,9 @@ class HomeScreen extends Component {
                 {currentDistance - stateRangeAttendance}m lagi hingga jarak kamu
                 sudah tidak lebih dari {stateRangeAttendance}
               </Text>
+              <Text style={styles.infoText}>
+                GPS : {geoPositioningInfo.isMocked?"Palsu":'Aman'}
+              </Text>
             </View>
           );
         } else {
@@ -199,6 +202,9 @@ class HomeScreen extends Component {
               <Text style={styles.infoText}>
                 Kamu berada sudah berada diposisi {currentDistance}m dari Lokasi
                 pengambilan Absen seharusnya (max:{stateRangeAttendance}m).
+              </Text>
+              <Text style={styles.infoText}>
+                GPS : {geoPositioningInfo.isMocked ? "Palsu" : 'Aman'}
               </Text>
             </View>
           );
@@ -257,25 +263,24 @@ class HomeScreen extends Component {
             : '100.999999999',
           isFakeGps: geoPositioningInfo ? geoPositioningInfo.isMocked : false,
         };
-
-        log('Absensi Data Before Distance', data);
-        // perbarui informasi jarak ke lokasi
-        // this.GeolocationsInfo();
-
-        const jarakDenganTitikAbsensi = currentDistance;
-        data.distance = jarakDenganTitikAbsensi;
-        log(
-          'Jarak dengan Titik Absensi sebelum dibandingkan',
-          jarakDenganTitikAbsensi,
-        );
-        log('Jarak Maksimal', stateRangeAttendance);
-
         let dataNotifikasi = {
           uid: userData.uid,
         };
 
+        log('Absensi Data Before Distance', data);
+        // perbarui informasi jarak ke lokasi disini
+
+        // const jarakDenganTitikAbsensi = currentDistance;
+        data.distance = currentDistance;
+        log(
+          'Jarak dengan Titik Absensi sebelum dibandingkan',
+          currentDistance,
+        );
+        log('Jarak Maksimal', stateRangeAttendance);
+        log('Mocked Status?', geoPositioningInfo.isMocked);
+
         if (!geoPositioningInfo.isMocked) {
-          if (jarakDenganTitikAbsensi < stateRangeAttendance) {
+          if (currentDistance < stateRangeAttendance) {
             if (type === 'out') {
               data.checkOut = currentDate;
             } else {
@@ -310,7 +315,7 @@ class HomeScreen extends Component {
               nama: userStudentData.nama,
               currentDate: currentDate,
               status: 'absekol_sukses_ortu',
-              currentRange: jarakDenganTitikAbsensi,
+              currentRange: currentDistance,
             });
 
             dataNotifikasi.message = `Absensi ${
@@ -330,11 +335,11 @@ class HomeScreen extends Component {
               nama: userStudentData.nama,
               currentDate: currentDate,
               status: 'absekol_gagal_terlalujauh',
-              currentRange: jarakDenganTitikAbsensi,
+              currentRange: currentDistance,
               stateRange: stateRangeAttendance,
             });
 
-            dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${jarakDenganTitikAbsensi} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
+            dataNotifikasi.message = `Pengambilan Absensi Gagal. Lokasi anda terdeteksi terlalu jauh senilai ${currentDistance} meter dari lokasi seharusnya, mohon lebih dekat lagi ${stateRangeAttendance} meter lagi dari titik absensi yang ditetapkan atau perbaiki keakuratan  GPS Anda!`;
             dataNotifikasi.receiver = userData.noWa;
             dataNotifikasi.attendanceId = result.id;
             dataNotifikasi.status = 'Notifikasi Dikrim  ke Siswa via WhatsApp';

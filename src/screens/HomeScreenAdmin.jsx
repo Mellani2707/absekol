@@ -145,6 +145,18 @@ class HomeScreenAdmin extends Component {
             <Icon name="document-text-outline" size={40} color="#E91E63" />
             <Text style={styles.buttonText}>Tambah User</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('LaporanKeluar')}>
+            <Icon name="document-text-outline" size={40} color="#E91E63" />
+            <Text style={styles.buttonText}>Daftar User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('LaporanKeluar')}>
+            <Icon name="document-text-outline" size={40} color="#E91E63" />
+            <Text style={styles.buttonText}>Daftar Siswa</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Information */}
