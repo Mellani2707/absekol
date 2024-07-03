@@ -13,6 +13,7 @@ import AbsensiMasukHistoryScreen from '../screens/AbsensiMasukHistoryScreen';
 import AbsensiKeluarHistoryScreen from '../screens/AbsensiKeluarHistoryScreen';
 import LaporanMasuk from '../screens/LaporanMasuk';
 import LaporanKeluar from '../screens/LaporanKeluar';
+import ConfigAppScreen from '../screens/ConfigAppScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,7 @@ const StackNavigator = () => {
           />
           <Stack.Screen name="LaporanMasuk" component={LaporanMasuk} />
           <Stack.Screen name="LaporanKeluar" component={LaporanKeluar} />
+          <Stack.Screen name="Config" component={ConfigAppScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
