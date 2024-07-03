@@ -70,16 +70,16 @@ class HomeScreen extends Component {
           log('Promise', 'start');
           Geolocation.getCurrentPosition(
             position => {
-              const {latitude, longitude, mocked} = position.coords;
+              const {latitude, longitude} = position.coords;
               log('Geo Position', position);
               this.setState(
                 {
                   geoPositioningInfo: {
-                    isMocked: mocked,
+                    isMocked: position.mocked,
                     la: latitude,
                     lo: longitude,
                   },
-                  loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${latitude} dan lo: ${longitude}`,
+                  loadingStatement: ` Kordinat kamu berhasil didapatkan la : ${latitude} dan lo: ${longitude} dengan status mocked: ${position.mocked}`,
                 },
                 () => {
                   log(
@@ -180,7 +180,8 @@ class HomeScreen extends Component {
 
   render() {
     const InfoLokasi = () => {
-      const { currentDistance, stateRangeAttendance, geoPositioningInfo } = this.state;
+      const {currentDistance, stateRangeAttendance, geoPositioningInfo} =
+        this.state;
       if (currentDistance > 0) {
         if (currentDistance > stateRangeAttendance) {
           return (
@@ -192,7 +193,7 @@ class HomeScreen extends Component {
                 sudah tidak lebih dari {stateRangeAttendance}
               </Text>
               <Text style={styles.infoText}>
-                GPS : {geoPositioningInfo.isMocked?"Palsu":'Aman'}
+                GPS : {geoPositioningInfo.isMocked ? 'Palsu' : 'Aman'}
               </Text>
             </View>
           );
@@ -204,7 +205,7 @@ class HomeScreen extends Component {
                 pengambilan Absen seharusnya (max:{stateRangeAttendance}m).
               </Text>
               <Text style={styles.infoText}>
-                GPS : {geoPositioningInfo.isMocked ? "Palsu" : 'Aman'}
+                GPS : {geoPositioningInfo.isMocked ? 'Palsu' : 'Aman'}
               </Text>
             </View>
           );
@@ -272,10 +273,7 @@ class HomeScreen extends Component {
 
         // const jarakDenganTitikAbsensi = currentDistance;
         data.distance = currentDistance;
-        log(
-          'Jarak dengan Titik Absensi sebelum dibandingkan',
-          currentDistance,
-        );
+        log('Jarak dengan Titik Absensi sebelum dibandingkan', currentDistance);
         log('Jarak Maksimal', stateRangeAttendance);
         log('Mocked Status?', geoPositioningInfo.isMocked);
 
