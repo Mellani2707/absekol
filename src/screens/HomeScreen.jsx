@@ -38,6 +38,7 @@ class HomeScreen extends Component {
       userStudentData: null,
       lastCheckIn: {},
       lastCheckOut: {},
+      loadedInfoAbsen:false,
       profileImage: 'L',
     };
   }
@@ -224,6 +225,7 @@ class HomeScreen extends Component {
       this.setState({
         loadingStatement: 'Load Attendance Info . .',
         loading: true,
+        loadedInfoAbsen:false,
       });
       log('Loading fetchInfoAbsen', this.state.loadingStatement);
       try {
@@ -239,6 +241,7 @@ class HomeScreen extends Component {
         this.setState({
           loadingStatement: 'Load Attendance Info completed.',
           loading: false,
+          loadedInfoAbsen:true
         });
         log('Loading fetchInfoAbsen', this.state.loadingStatement);
       }
@@ -375,7 +378,7 @@ class HomeScreen extends Component {
       log('Test men', 'Ok men' + param);
     };
 
-    const {profileImage, userStudentData, userData, lastCheckIn, lastCheckOut} =
+    const { profileImage, userStudentData, userData, lastCheckIn, lastCheckOut, loadedInfoAbsen } =
       this.state;
     const {navigation} = this.props;
 
@@ -444,13 +447,13 @@ class HomeScreen extends Component {
           </TouchableOpacity>
         </View>
 
-        {/* Information */}
+        {/* Information  */}
         <View style={styles.infoContainer}>
           {/* lastCheckIn */}
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
+              {loadedInfoAbsen?lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-':'Ambil Absen dulu untuk mendapatkan Info'}
             </Text>
             <TouchableOpacity
               style={styles.HistoryButton}
@@ -462,9 +465,9 @@ class HomeScreen extends Component {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckOut
+              {loadedInfoAbsen?lastCheckOut
                 ? IndonesiaTimeConverter(lastCheckOut.checkOut)
-                : '-'}
+                : '-' : 'Ambil Absen dulu untuk mendapatkan Info'}
             </Text>
             <TouchableOpacity
               style={styles.HistoryButton}

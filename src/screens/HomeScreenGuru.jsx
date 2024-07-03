@@ -76,9 +76,63 @@ class HomeScreenGuru extends Component {
   };
 
   render() {
+
     const {navigation} = this.props;
     const {loading, userData} = this.state;
-
+const MenuButton=()=>{
+  if (this.state.userData.Role.roleName=="Admin"){
+    return (<View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('LaporanMasuk')}>
+          <Icon name="document-text-outline" size={40} color="#4CAF50" />
+          <Text style={styles.buttonText}>Laporan Absensi Masuk Siswa</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('LaporanKeluar')}>
+          <Icon name="document-text-outline" size={40} color="#E91E63" />
+          <Text style={styles.buttonText}>Laporan Absensi Pulang Siswa</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Config')}>
+          <Icon name="cog-outline" size={40} color="#a6a4a1" />
+          <Text style={styles.buttonText}>Configurasi Aplikasi</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('AddUser')}>
+          <Icon name="cog-outline" size={40} color="#a6a4a1" />
+          <Text style={styles.buttonText}>Tambah User</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('ListUser')}>
+          <Icon name="cog-outline" size={40} color="#a6a4a1" />
+          <Text style={styles.buttonText}>Daftar User</Text>
+        </TouchableOpacity>
+      </View>
+    </View>)
+  }
+  return(<View>
+    <View style={styles.buttonsContainer}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('LaporanMasuk')}>
+        <Icon name="document-text-outline" size={40} color="#4CAF50" />
+        <Text style={styles.buttonText}>Laporan Absensi Masuk Siswa</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('LaporanKeluar')}>
+        <Icon name="document-text-outline" size={40} color="#E91E63" />
+        <Text style={styles.buttonText}>Laporan Absensi Pulang Siswa</Text>
+      </TouchableOpacity>
+    </View>
+  </View>)
+}
     if (loading) {
       return (
         <View style={styles.loadingContainer}>
@@ -126,20 +180,7 @@ class HomeScreenGuru extends Component {
         </View>
 
         {/* Buttons menu laporan*/}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('LaporanMasuk')}>
-            <Icon name="document-text-outline" size={40} color="#4CAF50" />
-            <Text style={styles.buttonText}>Laporan Absensi Masuk Siswa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('LaporanKeluar')}>
-            <Icon name="document-text-outline" size={40} color="#E91E63" />
-            <Text style={styles.buttonText}>Laporan Absensi Pulang Siswa</Text>
-          </TouchableOpacity>
-        </View>
+        <MenuButton/>
 
         {/* Information */}
         <View style={styles.infoContainer}>
