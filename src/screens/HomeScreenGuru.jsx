@@ -107,12 +107,6 @@ const MenuButton=()=>{
           <Icon name="cog-outline" size={40} color="#a6a4a1" />
           <Text style={styles.buttonText}>Tambah User</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('ListUser')}>
-          <Icon name="cog-outline" size={40} color="#a6a4a1" />
-          <Text style={styles.buttonText}>Daftar User</Text>
-        </TouchableOpacity>
       </View>
     </View>)
   }

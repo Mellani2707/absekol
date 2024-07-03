@@ -95,7 +95,7 @@ const LoginScreen = ({navigation}) => {
               userdata.Role.roleName == 'Admin' ||
               userdata.Role.roleName == 'admin'
             ) {
-              navigation.navigate('HomeAdmin'); // Navigasi ke halaman
+              navigation.navigate('HomeGuru'); // Navigasi ke halaman
             } else {
               navigation.navigate('HomeEmpty'); // Navigasi ke halaman
             }
