@@ -122,7 +122,7 @@ class HomeScreen extends Component {
       userData: this.props.user.user,
       userStudentData: this.props.user.user.Student,
       profileImage:
-        this.props.user.user.jenisKelamin === 'L' ? maleImage : femaleImage,
+        this.props.user.user.jenisKelamin == 'L' ? maleImage : femaleImage,
     });
 
     log('User Data -->', this.state.userData);
@@ -408,7 +408,12 @@ class HomeScreen extends Component {
             </View>
           </View>
           <View style={styles.profile}>
-            <Image source={profileImage} style={styles.profilePic} />
+            <Image
+              source={
+                userStudentData.jenisKelamin == 'L' ? maleImage : femaleImage
+              }
+              style={styles.profilePic}
+            />
             <View>
               <Text style={styles.profileName}>
                 {userStudentData ? userStudentData.nama : userData.username}
@@ -445,9 +450,7 @@ class HomeScreen extends Component {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Masuk Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckIn.checkIn
-                ? IndonesiaTimeConverter(lastCheckIn.checkIn)
-                : '-'}
+              {lastCheckIn ? IndonesiaTimeConverter(lastCheckIn.checkIn) : '-'}
             </Text>
             <TouchableOpacity
               style={styles.HistoryButton}
@@ -459,7 +462,7 @@ class HomeScreen extends Component {
           <View style={styles.infoBox}>
             <Text style={styles.infoTitle}>Absensi Keluar Terakhir</Text>
             <Text style={styles.infoText}>
-              {lastCheckOut.checkOut
+              {lastCheckOut
                 ? IndonesiaTimeConverter(lastCheckOut.checkOut)
                 : '-'}
             </Text>
