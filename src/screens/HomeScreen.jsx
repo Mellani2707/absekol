@@ -19,7 +19,7 @@ import {StoreNotifications} from '../API/StoreNotifications';
 import {getDistance} from '../Geolocations/getDistance';
 import log from '../utils/Logger'; // Import utilitas logging
 
-import {IndonesiaTimeConverter} from '../TimeZone/IndonesiaTimeConverter';
+import { IndonesiaTimeConverter, CheckDate } from '../TimeZone/IndonesiaTimeConverter';
 import moment from 'moment-timezone';
 import Geolocation from 'react-native-geolocation-service';
 
@@ -129,6 +129,16 @@ class HomeScreen extends Component {
     log('User Data -->', this.state.userData);
     this.setState({loading: false});
     log('Loading', 'load data user completed');
+
+    //AMBIL INFO ABSEN
+    const student = this.props.user.user.Student;
+    log('Data Siswa ', student);
+
+    if (student.nisn){
+      log('Data NISN Siswa :', student.nisn );
+      this.InfoAbsen(student.nisn)
+
+    }
   };
   GeolocationsInfo = async () => {
     this.setState({
@@ -173,9 +183,37 @@ class HomeScreen extends Component {
     this.fetchUserData();
   };
 
+  InfoAbsen = async (nisn)=>{
+    this.setState({
+      loadingStatement: 'Load Attendance Info . .',
+      loading: true,
+      loadedInfoAbsen: false,
+    });
+    log('Loading fetchInfoAbsen', this.state.loadingStatement);
+    try {
+      const result = await FetchData(
+        'https://absekol-api.numpang.my.id/api/attendanceInfo/' + nisn,
+      );
+      this.setState({ 
+        lastCheckIn: result.checkInTop,
+        lastCheckOut: result.checkOutTop,
+        isCheckInToday: CheckDate(result.checkInTop),
+        isCheckOutToday: CheckDate(result.checkOutTop)
+       });
+      log('Info Absensi Terakhir', result);
+    } catch (error) {
+      log('Fetch Info Error', error);
+    } finally {
+      this.setState({
+        loadingStatement: 'Load Attendance Info completed.',
+        loading: false,
+        loadedInfoAbsen: true
+      });
+      log('Loading fetchInfoAbsen', this.state.loadingStatement);
+    }
+  }
   componentDidMount() {
     this.GeolocationsInfo();
-
     // this.fetchUserData();
   }
 
@@ -295,7 +333,7 @@ class HomeScreen extends Component {
               'Success',
               `Absensi ${type === 'in' ? 'Masuk' : 'Pulang'} berhasil`,
             );
-            fetchInfoAbsen(userStudentData.nisn);
+            this.InfoAbsen(userStudentData.nisn);
 
             dataNotifikasi.message = `Absensi ${
               type === 'in' ? 'Masuk' : 'Pulang'
@@ -378,7 +416,7 @@ class HomeScreen extends Component {
       log('Test men', 'Ok men' + param);
     };
 
-    const { profileImage, userStudentData, userData, lastCheckIn, lastCheckOut, loadedInfoAbsen } =
+    const { profileImage, userStudentData, userData, lastCheckIn, lastCheckOut, loadedInfoAbsen,isCheckInToday,isCheckOutToday } =
       this.state;
     const {navigation} = this.props;
 
@@ -434,12 +472,14 @@ class HomeScreen extends Component {
         {/* Buttons */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
+          disabled={isCheckInToday}
             style={styles.button}
             onPress={() => handleAbsensi('in')}>
             <Icon name="log-in-outline" size={40} color="#4CAF50" />
             <Text style={styles.buttonText}>Masuk</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            disabled={isCheckOutToday}
             style={styles.button}
             onPress={() => handleAbsensi('out')}>
             <Icon name="log-out-outline" size={40} color="#E91E63" />

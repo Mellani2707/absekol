@@ -30,3 +30,10 @@ export const IndonesiaTimeOnlyConverter = plainTime => {
   // console.log(formattedTimeOnly); // Output: 08.02
   return formattedTimeOnly;
 };
+
+export const CheckDate = (inputDate) => {
+  const today = moment().tz('Asia/Jakarta').startOf('day');
+  const input = moment(inputDate).tz('Asia/Jakarta').startOf('day');
+
+  return today.isSame(input);
+};
